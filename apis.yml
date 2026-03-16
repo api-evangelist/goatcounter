@@ -2,15 +2,16 @@ aid: goatcounter
 name: GoatCounter
 description: >-
   The GoatCounter API can be used to manage sites, users, export data, or build
-  your own dashboard. 
+  your own dashboard.
 type: Index
 position: Consumer
 access: 3rd-Party
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
   - API
+  - Analytics
 created: '2025-02-08'
-modified: '2025-02-08'
+modified: '2026-03-16'
 url: >-
   https://raw.githubusercontent.com/api-evangelist/goatcounter/refs/heads/main/apis.yml
 specificationVersion: '0.19'
@@ -19,13 +20,24 @@ apis:
     name: GoatCounter
     description: >-
       The GoatCounter API can be used to manage sites, users, export data, or
-      build your own dashboard. 
-    humanURL: ' https://www.goatcounter.com/help/api'
+      build your own dashboard.
+    humanURL: https://www.goatcounter.com/help/api
+    baseURL: https://goatcounter.com/api/v0
     tags:
       - API
+      - Analytics
     properties:
       - type: Documentation
-        url: ' https://www.goatcounter.com/help/api'
+        url: https://www.goatcounter.com/help/api
+common:
+  - type: Website
+    url: https://www.goatcounter.com/
+  - type: Documentation
+    url: https://www.goatcounter.com/help/api
+  - type: Sign Up
+    url: https://www.goatcounter.com/signup
+  - type: GitHub Organization
+    url: https://github.com/arp242/goatcounter
 maintainers:
   - FN: Kin Lane
-    email: info@apievangelist.com
+    email: kin@apievangelist.com
