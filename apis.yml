@@ -8,7 +8,6 @@ position: Consumer
 access: 3rd-Party
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-  - API
   - Analytics
 created: '2025-02-08'
 modified: '2026-03-16'
@@ -24,7 +23,6 @@ apis:
     humanURL: https://www.goatcounter.com/help/api
     baseURL: https://goatcounter.com/api/v0
     tags:
-      - API
       - Analytics
     properties:
       - type: Documentation
