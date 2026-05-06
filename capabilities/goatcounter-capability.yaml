@@ -1,0 +1,693 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: GoatCounter API
+  description: The GoatCounter API can be used to manage sites, users, count pageviews, export raw data, retrieve statistics,
+    and build custom dashboards on top of GoatCounter web analytics.
+  tags:
+  - Goatcounter
+  - API
+  created: '2026-05-06'
+  modified: '2026-05-06'
+capability:
+  consumes:
+  - type: http
+    namespace: goatcounter
+    baseUri: https://goatcounter.com/api/v0
+    description: GoatCounter API HTTP API.
+    authentication:
+      type: bearer
+      token: '{{GOATCOUNTER_TOKEN}}'
+    resources:
+    - name: count
+      path: /count
+      operations:
+      - name: count
+        method: POST
+        description: Count pageviews
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: export
+      path: /export
+      operations:
+      - name: createexport
+        method: POST
+        description: Create CSV export
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: export-id
+      path: /export/{id}
+      operations:
+      - name: getexport
+        method: GET
+        description: Get export info
+        inputParameters:
+        - name: id
+          in: path
+          type: integer
+          required: true
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: export-id-download
+      path: /export/{id}/download
+      operations:
+      - name: downloadexport
+        method: GET
+        description: Download export
+        inputParameters:
+        - name: id
+          in: path
+          type: integer
+          required: true
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: stats-total
+      path: /stats/total
+      operations:
+      - name: statstotal
+        method: GET
+        description: List total pageview counts
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: stats-hits
+      path: /stats/hits
+      operations:
+      - name: statshits
+        method: GET
+        description: View/visitor stats per path
+        inputParameters:
+        - name: limit
+          in: query
+          type: integer
+        - name: include_paths
+          in: query
+          type: array
+        - name: exclude_paths
+          in: query
+          type: array
+        - name: daily
+          in: query
+          type: boolean
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: stats-hits-path-id
+      path: /stats/hits/{path_id}
+      operations:
+      - name: statshitsrefs
+        method: GET
+        description: Referral stats for a path
+        inputParameters:
+        - name: path_id
+          in: path
+          type: integer
+          required: true
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: stats-page
+      path: /stats/{page}
+      operations:
+      - name: statsbypage
+        method: GET
+        description: Stats for a category (browser, system, location, etc.)
+        inputParameters:
+        - name: page
+          in: path
+          type: string
+          required: true
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: stats-page-id
+      path: /stats/{page}/{id}
+      operations:
+      - name: statsbypagedetail
+        method: GET
+        description: Detailed stats within a category
+        inputParameters:
+        - name: page
+          in: path
+          type: string
+          required: true
+        - name: id
+          in: path
+          type: string
+          required: true
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: sites
+      path: /sites
+      operations:
+      - name: listsites
+        method: GET
+        description: List sites
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createsite
+        method: PUT
+        description: Create a new site
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: sites-id
+      path: /sites/{id}
+      operations:
+      - name: getsite
+        method: GET
+        description: Get site detail
+        inputParameters:
+        - name: id
+          in: path
+          type: integer
+          required: true
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: updatesitepost
+        method: POST
+        description: Update a site
+        inputParameters:
+        - name: id
+          in: path
+          type: integer
+          required: true
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: patchsite
+        method: PATCH
+        description: Patch a site
+        inputParameters:
+        - name: id
+          in: path
+          type: integer
+          required: true
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: me
+      path: /me
+      operations:
+      - name: getme
+        method: GET
+        description: Get current user
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: paths
+      path: /paths
+      operations:
+      - name: listpaths
+        method: GET
+        description: List paths
+        inputParameters:
+        - name: limit
+          in: query
+          type: integer
+        - name: after
+          in: query
+          type: integer
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    port: 8080
+    namespace: goatcounter-rest
+    description: REST adapter for GoatCounter API.
+    resources:
+    - path: /count
+      name: count
+      operations:
+      - method: POST
+        name: count
+        description: Count pageviews
+        call: goatcounter.count
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /export
+      name: createexport
+      operations:
+      - method: POST
+        name: createexport
+        description: Create CSV export
+        call: goatcounter.createexport
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /export/{id}
+      name: getexport
+      operations:
+      - method: GET
+        name: getexport
+        description: Get export info
+        call: goatcounter.getexport
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /export/{id}/download
+      name: downloadexport
+      operations:
+      - method: GET
+        name: downloadexport
+        description: Download export
+        call: goatcounter.downloadexport
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /stats/total
+      name: statstotal
+      operations:
+      - method: GET
+        name: statstotal
+        description: List total pageview counts
+        call: goatcounter.statstotal
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /stats/hits
+      name: statshits
+      operations:
+      - method: GET
+        name: statshits
+        description: View/visitor stats per path
+        call: goatcounter.statshits
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /stats/hits/{path_id}
+      name: statshitsrefs
+      operations:
+      - method: GET
+        name: statshitsrefs
+        description: Referral stats for a path
+        call: goatcounter.statshitsrefs
+        with:
+          path_id: rest.path_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /stats/{page}
+      name: statsbypage
+      operations:
+      - method: GET
+        name: statsbypage
+        description: Stats for a category (browser, system, location, etc.)
+        call: goatcounter.statsbypage
+        with:
+          page: rest.page
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /stats/{page}/{id}
+      name: statsbypagedetail
+      operations:
+      - method: GET
+        name: statsbypagedetail
+        description: Detailed stats within a category
+        call: goatcounter.statsbypagedetail
+        with:
+          page: rest.page
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /sites
+      name: listsites
+      operations:
+      - method: GET
+        name: listsites
+        description: List sites
+        call: goatcounter.listsites
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /sites
+      name: createsite
+      operations:
+      - method: PUT
+        name: createsite
+        description: Create a new site
+        call: goatcounter.createsite
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /sites/{id}
+      name: getsite
+      operations:
+      - method: GET
+        name: getsite
+        description: Get site detail
+        call: goatcounter.getsite
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /sites/{id}
+      name: updatesitepost
+      operations:
+      - method: POST
+        name: updatesitepost
+        description: Update a site
+        call: goatcounter.updatesitepost
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /sites/{id}
+      name: patchsite
+      operations:
+      - method: PATCH
+        name: patchsite
+        description: Patch a site
+        call: goatcounter.patchsite
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /me
+      name: getme
+      operations:
+      - method: GET
+        name: getme
+        description: Get current user
+        call: goatcounter.getme
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /paths
+      name: listpaths
+      operations:
+      - method: GET
+        name: listpaths
+        description: List paths
+        call: goatcounter.listpaths
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    port: 9090
+    namespace: goatcounter-mcp
+    transport: http
+    description: MCP adapter for GoatCounter API for AI agent use.
+    tools:
+    - name: count
+      description: Count pageviews
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: goatcounter.count
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: createexport
+      description: Create CSV export
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: goatcounter.createexport
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: getexport
+      description: Get export info
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.getexport
+      with:
+        id: tools.id
+      inputParameters:
+      - name: id
+        type: integer
+        description: id
+        required: true
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: downloadexport
+      description: Download export
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.downloadexport
+      with:
+        id: tools.id
+      inputParameters:
+      - name: id
+        type: integer
+        description: id
+        required: true
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: statstotal
+      description: List total pageview counts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.statstotal
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: statshits
+      description: View/visitor stats per path
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.statshits
+      with:
+        limit: tools.limit
+        include_paths: tools.include_paths
+        exclude_paths: tools.exclude_paths
+        daily: tools.daily
+      inputParameters:
+      - name: limit
+        type: integer
+        description: limit
+      - name: include_paths
+        type: array
+        description: include_paths
+      - name: exclude_paths
+        type: array
+        description: exclude_paths
+      - name: daily
+        type: boolean
+        description: daily
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: statshitsrefs
+      description: Referral stats for a path
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.statshitsrefs
+      with:
+        path_id: tools.path_id
+      inputParameters:
+      - name: path_id
+        type: integer
+        description: path_id
+        required: true
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: statsbypage
+      description: Stats for a category (browser, system, location, etc.)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.statsbypage
+      with:
+        page: tools.page
+      inputParameters:
+      - name: page
+        type: string
+        description: page
+        required: true
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: statsbypagedetail
+      description: Detailed stats within a category
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.statsbypagedetail
+      with:
+        page: tools.page
+        id: tools.id
+      inputParameters:
+      - name: page
+        type: string
+        description: page
+        required: true
+      - name: id
+        type: string
+        description: id
+        required: true
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listsites
+      description: List sites
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.listsites
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: createsite
+      description: Create a new site
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: goatcounter.createsite
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: getsite
+      description: Get site detail
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.getsite
+      with:
+        id: tools.id
+      inputParameters:
+      - name: id
+        type: integer
+        description: id
+        required: true
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: updatesitepost
+      description: Update a site
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: goatcounter.updatesitepost
+      with:
+        id: tools.id
+      inputParameters:
+      - name: id
+        type: integer
+        description: id
+        required: true
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: patchsite
+      description: Patch a site
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: goatcounter.patchsite
+      with:
+        id: tools.id
+      inputParameters:
+      - name: id
+        type: integer
+        description: id
+        required: true
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: getme
+      description: Get current user
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.getme
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: listpaths
+      description: List paths
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter.listpaths
+      with:
+        limit: tools.limit
+        after: tools.after
+      inputParameters:
+      - name: limit
+        type: integer
+        description: limit
+      - name: after
+        type: integer
+        description: after
+      outputParameters:
+      - type: object
+        mapping: $.
+binds:
+- namespace: env
+  keys:
+    GOATCOUNTER_TOKEN: GOATCOUNTER_TOKEN
