@@ -44,9 +44,9 @@ common:
     url: https://www.goatcounter.com/
   - type: Documentation
     url: https://www.goatcounter.com/help/api
-  - type: Sign Up
+  - type: SignUp
     url: https://www.goatcounter.com/signup
-  - type: GitHub Organization
+  - type: GitHubOrganization
     url: https://github.com/arp242/goatcounter
 maintainers:
   - FN: Kin Lane
