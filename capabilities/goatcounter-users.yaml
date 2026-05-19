@@ -1,0 +1,70 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: GoatCounter API — Users
+  description: 'GoatCounter API — Users. 1 operations. Lead operation: Get current user. Self-contained Naftiko capability
+    covering one Goatcounter business surface.'
+  tags:
+  - Goatcounter
+  - Users
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    GOATCOUNTER_API_KEY: GOATCOUNTER_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: goatcounter-users
+    baseUri: https://goatcounter.com/api/v0
+    description: GoatCounter API — Users business capability. Self-contained, no shared references.
+    resources:
+    - name: me
+      path: /me
+      operations:
+      - name: getme
+        method: GET
+        description: Get current user
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: bearer
+      token: '{{env.GOATCOUNTER_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: goatcounter-users-rest
+    port: 8080
+    description: REST adapter for GoatCounter API — Users. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/me
+      name: me
+      description: REST surface for me.
+      operations:
+      - method: GET
+        name: getme
+        description: Get current user
+        call: goatcounter-users.getme
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: goatcounter-users-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for GoatCounter API — Users. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: get-current-user
+      description: Get current user
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter-users.getme
+      outputParameters:
+      - type: object
+        mapping: $.

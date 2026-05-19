@@ -1,0 +1,83 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: GoatCounter API — Paths
+  description: 'GoatCounter API — Paths. 1 operations. Lead operation: List paths. Self-contained Naftiko capability covering
+    one Goatcounter business surface.'
+  tags:
+  - Goatcounter
+  - Paths
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    GOATCOUNTER_API_KEY: GOATCOUNTER_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: goatcounter-paths
+    baseUri: https://goatcounter.com/api/v0
+    description: GoatCounter API — Paths business capability. Self-contained, no shared references.
+    resources:
+    - name: paths
+      path: /paths
+      operations:
+      - name: listpaths
+        method: GET
+        description: List paths
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: limit
+          in: query
+          type: integer
+        - name: after
+          in: query
+          type: integer
+    authentication:
+      type: bearer
+      token: '{{env.GOATCOUNTER_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: goatcounter-paths-rest
+    port: 8080
+    description: REST adapter for GoatCounter API — Paths. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/paths
+      name: paths
+      description: REST surface for paths.
+      operations:
+      - method: GET
+        name: listpaths
+        description: List paths
+        call: goatcounter-paths.listpaths
+        with:
+          limit: rest.limit
+          after: rest.after
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: goatcounter-paths-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for GoatCounter API — Paths. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: list-paths
+      description: List paths
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: goatcounter-paths.listpaths
+      with:
+        limit: tools.limit
+        after: tools.after
+      outputParameters:
+      - type: object
+        mapping: $.
