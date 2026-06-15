@@ -1,0 +1,431 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GoatCounter API",
+    "version": "0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Pageviews",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Count pageviews",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://goatcounter.com/api/v0/count",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Send one or more pageview events to GoatCounter for tracking. Accepts a batch of hits per request."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Exports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create CSV export",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://goatcounter.com/api/v0/export",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Start a new export of raw pageview data to CSV."
+        },
+        {
+          "info": {
+            "name": "Get export info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/export/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get export info"
+        },
+        {
+          "info": {
+            "name": "Download export",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/export/:id/download",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Download export"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Statistics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List total pageview counts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/stats/total",
+            "params": [
+              {
+                "name": "start",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Filter paths by substring or regex."
+              }
+            ]
+          },
+          "docs": "List total pageview counts"
+        },
+        {
+          "info": {
+            "name": "View/visitor stats per path",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/stats/hits",
+            "params": [
+              {
+                "name": "start",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Filter paths by substring or regex."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "include_paths",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "exclude_paths",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "daily",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "View/visitor stats per path"
+        },
+        {
+          "info": {
+            "name": "Referral stats for a path",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/stats/hits/:path_id",
+            "params": [
+              {
+                "name": "path_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Filter paths by substring or regex."
+              }
+            ]
+          },
+          "docs": "Referral stats for a path"
+        },
+        {
+          "info": {
+            "name": "Stats for a category (browser, system, location, etc.)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/stats/:page",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Filter paths by substring or regex."
+              }
+            ]
+          },
+          "docs": "Stats for a category (browser, system, location, etc.)"
+        },
+        {
+          "info": {
+            "name": "Detailed stats within a category",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/stats/:page/:id",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Detailed stats within a category"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sites",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List sites",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/sites"
+          },
+          "docs": "List sites"
+        },
+        {
+          "info": {
+            "name": "Create a new site",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://goatcounter.com/api/v0/sites",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new site"
+        },
+        {
+          "info": {
+            "name": "Get site detail",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/sites/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get site detail"
+        },
+        {
+          "info": {
+            "name": "Update a site",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://goatcounter.com/api/v0/sites/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a site"
+        },
+        {
+          "info": {
+            "name": "Patch a site",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://goatcounter.com/api/v0/sites/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Patch a site"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get current user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/me"
+          },
+          "docs": "Get current user"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Paths",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List paths",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/paths",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get an overview of all tracked paths on the site."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
