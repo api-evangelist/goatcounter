@@ -40,7 +40,7 @@ common:
     url: https://www.goatcounter.com/
   - type: Documentation
     url: https://www.goatcounter.com/help/api
-  - type: SignUp
+  - type: Signup
     url: https://www.goatcounter.com/signup
   - type: GitHubOrganization
     url: https://github.com/arp242/goatcounter
