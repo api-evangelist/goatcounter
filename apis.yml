@@ -36,6 +36,8 @@ apis:
       - type: OpenAPI
         url: https://raw.githubusercontent.com/api-evangelist/goatcounter/refs/heads/main/openapi/goatcounter-openapi.yml
 common:
+  - type: AgenticAccess
+    url: agentic-access/goatcounter-agentic-access.yml
   - type: DomainSecurity
     url: security/goatcounter-domain-security.yml
   - type: Authentication
