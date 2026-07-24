@@ -1,0 +1,152 @@
+openapi: 3.0.3
+info:
+  title: GoatCounter Exports Statistics API
+  description: The GoatCounter API can be used to manage sites, users, count pageviews, export raw data, retrieve statistics, and build custom dashboards on top of GoatCounter web analytics.
+  version: '0'
+  contact:
+    name: GoatCounter
+    url: https://www.goatcounter.com/
+servers:
+- url: https://goatcounter.com/api/v0
+  description: Hosted GoatCounter (replace host with your site's subdomain)
+security:
+- bearerAuth: []
+tags:
+- name: Statistics
+paths:
+  /stats/total:
+    get:
+      summary: List total pageview counts
+      operationId: statsTotal
+      tags:
+      - Statistics
+      parameters:
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      - $ref: '#/components/parameters/Filter'
+      responses:
+        '200':
+          description: Total counts.
+  /stats/hits:
+    get:
+      summary: View/visitor stats per path
+      operationId: statsHits
+      tags:
+      - Statistics
+      parameters:
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      - $ref: '#/components/parameters/Filter'
+      - name: limit
+        in: query
+        schema:
+          type: integer
+      - name: include_paths
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: exclude_paths
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: daily
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Per-path hit statistics.
+  /stats/hits/{path_id}:
+    get:
+      summary: Referral stats for a path
+      operationId: statsHitsRefs
+      tags:
+      - Statistics
+      parameters:
+      - name: path_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      - $ref: '#/components/parameters/Filter'
+      responses:
+        '200':
+          description: Referral stats.
+  /stats/{page}:
+    get:
+      summary: Stats for a category (browser, system, location, etc.)
+      operationId: statsByPage
+      tags:
+      - Statistics
+      parameters:
+      - name: page
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - browsers
+          - systems
+          - locations
+          - languages
+          - sizes
+          - campaigns
+          - toprefs
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      - $ref: '#/components/parameters/Filter'
+      responses:
+        '200':
+          description: Category statistics.
+  /stats/{page}/{id}:
+    get:
+      summary: Detailed stats within a category
+      operationId: statsByPageDetail
+      tags:
+      - Statistics
+      parameters:
+      - name: page
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      responses:
+        '200':
+          description: Detailed statistics.
+components:
+  parameters:
+    End:
+      name: end
+      in: query
+      schema:
+        type: string
+        format: date-time
+    Start:
+      name: start
+      in: query
+      schema:
+        type: string
+        format: date-time
+    Filter:
+      name: filter
+      in: query
+      description: Filter paths by substring or regex.
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

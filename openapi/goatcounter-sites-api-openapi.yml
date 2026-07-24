@@ -1,0 +1,108 @@
+openapi: 3.0.3
+info:
+  title: GoatCounter Exports Sites API
+  description: The GoatCounter API can be used to manage sites, users, count pageviews, export raw data, retrieve statistics, and build custom dashboards on top of GoatCounter web analytics.
+  version: '0'
+  contact:
+    name: GoatCounter
+    url: https://www.goatcounter.com/
+servers:
+- url: https://goatcounter.com/api/v0
+  description: Hosted GoatCounter (replace host with your site's subdomain)
+security:
+- bearerAuth: []
+tags:
+- name: Sites
+paths:
+  /sites:
+    get:
+      summary: List sites
+      operationId: listSites
+      tags:
+      - Sites
+      responses:
+        '200':
+          description: A list of sites.
+    put:
+      summary: Create a new site
+      operationId: createSite
+      tags:
+      - Sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Site'
+      responses:
+        '200':
+          description: Site created.
+  /sites/{id}:
+    get:
+      summary: Get site detail
+      operationId: getSite
+      tags:
+      - Sites
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Site detail.
+    post:
+      summary: Update a site
+      operationId: updateSitePost
+      tags:
+      - Sites
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Site'
+      responses:
+        '200':
+          description: Site updated.
+    patch:
+      summary: Patch a site
+      operationId: patchSite
+      tags:
+      - Sites
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Site'
+      responses:
+        '200':
+          description: Site updated.
+components:
+  schemas:
+    Site:
+      type: object
+      properties:
+        code:
+          type: string
+        cname:
+          type: string
+        link_domain:
+          type: string
+        settings:
+          type: object
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

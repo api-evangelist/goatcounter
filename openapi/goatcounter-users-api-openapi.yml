@@ -1,0 +1,30 @@
+openapi: 3.0.3
+info:
+  title: GoatCounter Exports Users API
+  description: The GoatCounter API can be used to manage sites, users, count pageviews, export raw data, retrieve statistics, and build custom dashboards on top of GoatCounter web analytics.
+  version: '0'
+  contact:
+    name: GoatCounter
+    url: https://www.goatcounter.com/
+servers:
+- url: https://goatcounter.com/api/v0
+  description: Hosted GoatCounter (replace host with your site's subdomain)
+security:
+- bearerAuth: []
+tags:
+- name: Users
+paths:
+  /me:
+    get:
+      summary: Get current user
+      operationId: getMe
+      tags:
+      - Users
+      responses:
+        '200':
+          description: Current user info.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
