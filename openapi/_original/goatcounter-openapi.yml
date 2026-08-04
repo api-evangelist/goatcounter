@@ -1,0 +1,380 @@
+openapi: 3.0.3
+info:
+  title: GoatCounter API
+  description: >-
+    The GoatCounter API can be used to manage sites, users, count pageviews,
+    export raw data, retrieve statistics, and build custom dashboards on top
+    of GoatCounter web analytics.
+  version: '0'
+  contact:
+    name: GoatCounter
+    url: https://www.goatcounter.com/
+servers:
+  - url: https://goatcounter.com/api/v0
+    description: Hosted GoatCounter (replace host with your site's subdomain)
+security:
+  - bearerAuth: []
+paths:
+  /count:
+    post:
+      summary: Count pageviews
+      description: >-
+        Send one or more pageview events to GoatCounter for tracking. Accepts
+        a batch of hits per request.
+      operationId: count
+      tags:
+        - Pageviews
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                no_sessions:
+                  type: boolean
+                hits:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Hit'
+      responses:
+        '202':
+          description: Hits accepted.
+        '400':
+          description: Bad request.
+        '401':
+          description: Unauthorized.
+  /export:
+    post:
+      summary: Create CSV export
+      description: Start a new export of raw pageview data to CSV.
+      operationId: createExport
+      tags:
+        - Exports
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_from_hit_id:
+                  type: integer
+      responses:
+        '202':
+          description: Export started.
+  /export/{id}:
+    get:
+      summary: Get export info
+      operationId: getExport
+      tags:
+        - Exports
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Export metadata.
+  /export/{id}/download:
+    get:
+      summary: Download export
+      operationId: downloadExport
+      tags:
+        - Exports
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: CSV export file.
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+  /stats/total:
+    get:
+      summary: List total pageview counts
+      operationId: statsTotal
+      tags:
+        - Statistics
+      parameters:
+        - $ref: '#/components/parameters/Start'
+        - $ref: '#/components/parameters/End'
+        - $ref: '#/components/parameters/Filter'
+      responses:
+        '200':
+          description: Total counts.
+  /stats/hits:
+    get:
+      summary: View/visitor stats per path
+      operationId: statsHits
+      tags:
+        - Statistics
+      parameters:
+        - $ref: '#/components/parameters/Start'
+        - $ref: '#/components/parameters/End'
+        - $ref: '#/components/parameters/Filter'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: include_paths
+          in: query
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: exclude_paths
+          in: query
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: daily
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Per-path hit statistics.
+  /stats/hits/{path_id}:
+    get:
+      summary: Referral stats for a path
+      operationId: statsHitsRefs
+      tags:
+        - Statistics
+      parameters:
+        - name: path_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/Start'
+        - $ref: '#/components/parameters/End'
+        - $ref: '#/components/parameters/Filter'
+      responses:
+        '200':
+          description: Referral stats.
+  /stats/{page}:
+    get:
+      summary: Stats for a category (browser, system, location, etc.)
+      operationId: statsByPage
+      tags:
+        - Statistics
+      parameters:
+        - name: page
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - browsers
+              - systems
+              - locations
+              - languages
+              - sizes
+              - campaigns
+              - toprefs
+        - $ref: '#/components/parameters/Start'
+        - $ref: '#/components/parameters/End'
+        - $ref: '#/components/parameters/Filter'
+      responses:
+        '200':
+          description: Category statistics.
+  /stats/{page}/{id}:
+    get:
+      summary: Detailed stats within a category
+      operationId: statsByPageDetail
+      tags:
+        - Statistics
+      parameters:
+        - name: page
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Start'
+        - $ref: '#/components/parameters/End'
+      responses:
+        '200':
+          description: Detailed statistics.
+  /sites:
+    get:
+      summary: List sites
+      operationId: listSites
+      tags:
+        - Sites
+      responses:
+        '200':
+          description: A list of sites.
+    put:
+      summary: Create a new site
+      operationId: createSite
+      tags:
+        - Sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Site'
+      responses:
+        '200':
+          description: Site created.
+  /sites/{id}:
+    get:
+      summary: Get site detail
+      operationId: getSite
+      tags:
+        - Sites
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Site detail.
+    post:
+      summary: Update a site
+      operationId: updateSitePost
+      tags:
+        - Sites
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Site'
+      responses:
+        '200':
+          description: Site updated.
+    patch:
+      summary: Patch a site
+      operationId: patchSite
+      tags:
+        - Sites
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Site'
+      responses:
+        '200':
+          description: Site updated.
+  /me:
+    get:
+      summary: Get current user
+      operationId: getMe
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Current user info.
+  /paths:
+    get:
+      summary: List paths
+      description: Get an overview of all tracked paths on the site.
+      operationId: listPaths
+      tags:
+        - Paths
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: after
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Paths overview.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    Start:
+      name: start
+      in: query
+      schema:
+        type: string
+        format: date-time
+    End:
+      name: end
+      in: query
+      schema:
+        type: string
+        format: date-time
+    Filter:
+      name: filter
+      in: query
+      description: Filter paths by substring or regex.
+      schema:
+        type: string
+  schemas:
+    Hit:
+      type: object
+      properties:
+        path:
+          type: string
+        title:
+          type: string
+        ref:
+          type: string
+        event:
+          type: boolean
+        size:
+          type: array
+          items:
+            type: number
+        bot:
+          type: integer
+        user_agent:
+          type: string
+        location:
+          type: string
+        ip:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        query:
+          type: string
+        session:
+          type: string
+    Site:
+      type: object
+      properties:
+        code:
+          type: string
+        cname:
+          type: string
+        link_domain:
+          type: string
+        settings:
+          type: object

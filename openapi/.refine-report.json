@@ -1,0 +1,24 @@
+{
+  "provider": "goatcounter",
+  "sources": [
+    "goatcounter-exports-api-openapi.yml",
+    "goatcounter-pageviews-api-openapi.yml",
+    "goatcounter-paths-api-openapi.yml",
+    "goatcounter-sites-api-openapi.yml",
+    "goatcounter-statistics-api-openapi.yml",
+    "goatcounter-users-api-openapi.yml"
+  ],
+  "outputs": [
+    "goatcounter-exports-api-openapi.yml",
+    "goatcounter-pageviews-api-openapi.yml",
+    "goatcounter-paths-api-openapi.yml",
+    "goatcounter-sites-api-openapi.yml",
+    "goatcounter-statistics-api-openapi.yml",
+    "goatcounter-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
