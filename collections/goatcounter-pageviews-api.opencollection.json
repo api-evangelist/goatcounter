@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GoatCounter Exports Pageviews API",
+    "version": "0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Pageviews",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Count pageviews",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://goatcounter.com/api/v0/count",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Send one or more pageview events to GoatCounter for tracking. Accepts a batch of hits per request."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

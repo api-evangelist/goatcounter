@@ -1,0 +1,112 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GoatCounter Exports Sites API",
+    "version": "0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sites",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List sites",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/sites"
+          },
+          "docs": "List sites"
+        },
+        {
+          "info": {
+            "name": "Create a new site",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://goatcounter.com/api/v0/sites",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new site"
+        },
+        {
+          "info": {
+            "name": "Get site detail",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/sites/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get site detail"
+        },
+        {
+          "info": {
+            "name": "Update a site",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://goatcounter.com/api/v0/sites/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a site"
+        },
+        {
+          "info": {
+            "name": "Patch a site",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://goatcounter.com/api/v0/sites/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Patch a site"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

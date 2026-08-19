@@ -1,0 +1,109 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://www.goatcounter.com/code,
+  https://www.goatcounter.com/help/js,
+  https://www.goatcounter.com/help/visitor-counter,
+  https://www.goatcounter.com/help/pixel,
+  https://www.goatcounter.com/help/countjs-versions
+description: >-
+  GoatCounter's client-side surface is a single small browser script, count.js, served from the
+  provider's own CDN host gc.zgo.at, plus two no-JavaScript alternatives (a tracking pixel and an
+  embeddable visitor-counter widget). The script is served unminified by design so it can be read,
+  is roughly 3.2KB, and exposes a window.goatcounter object with settings and callable methods.
+families:
+  - name: count.js tracking script
+    kind: browser-script
+    loader: '<script data-goatcounter="https://MYCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>'
+    url: https://gc.zgo.at/count.js
+    docs: https://www.goatcounter.com/help/js
+    unminified: true
+    approx_size: 3.2KB
+    settings:
+      - name: no_onload
+        description: Don't do anything on page load, for cases where you want to call count() manually. Also won't bind events.
+      - name: no_events
+        description: Don't bind events.
+      - name: allow_local
+        description: Allow requests from local addresses (localhost, 192.168.0.0, etc.) for testing the integration locally.
+      - name: allow_frame
+        description: Allow requests when the page is loaded in a frame or iframe.
+      - name: endpoint
+        description: Customize the endpoint pageviews are sent to; overrides the data-goatcounter URL. Only useful with no_onload.
+    configuration_methods:
+      - data-goatcounter-settings attribute on the script tag (must be valid JSON)
+      - window.goatcounter object, set before count.js loads
+    methods:
+      - name: goatcounter.count()
+        description: Send a pageview or event manually.
+      - name: goatcounter.get_data()
+        description: Return the data that would be sent, for inspection or modification.
+      - name: goatcounter.filter()
+        description: Return the reason a pageview would be filtered out, if any.
+      - name: goatcounter.visit_count()
+        description: Render the public visitor counter into the page.
+    versions:
+      distribution: cdn
+      unpinned: '//gc.zgo.at/count.js'
+      pinned:
+        - version: v5
+          date: '2025-06-09'
+          url: https://gc.zgo.at/count.v5.js
+          integrity: sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ
+        - version: v4
+          date: '2023-12-08'
+          url: https://gc.zgo.at/count.v4.js
+          integrity: sha384-nRw6qfbWyJha9LhsOtSb2YJDyZdKvvCFh0fJYlkquSFjUxp9FVNugbfy8q1jdxI+
+        - version: v3
+          date: '2021-12-01'
+          url: https://gc.zgo.at/count.v3.js
+          integrity: sha384-QGgNMMRFTi8ul5kHJ+vXysPe8gySvSA/Y3rpXZiRLzKPIw8CWY+a3ObKmQsyDr+a
+      sri: true
+      docs: https://www.goatcounter.com/help/countjs-versions
+      compatibility_statement: >-
+        "Any existing version of count.js is guaranteed to remain compatible, but you may need to
+        update it in the future for new features."
+      self_hosting_allowed: true
+  - name: Visitor counter widget
+    kind: embeddable-widget
+    docs: https://www.goatcounter.com/help/visitor-counter
+    invocation: "window.goatcounter.visit_count({append: 'body'})"
+    render_types: [html, svg, png]
+    default_size: 200x80 (200x60 with no_branding)
+    options:
+      - {name: append, description: 'HTML selector to append to; any querySelector() selector. Default body.'}
+      - {name: type, description: 'html, svg or png. Default html.'}
+      - {name: path, description: Path to display; normally detected from the URL.}
+      - {name: no_branding, description: Do not display the "by GoatCounter" branding.}
+      - {name: attr, description: HTML attributes to set or override; html type only.}
+      - {name: style, description: Extra CSS styling; html or svg types only.}
+      - {name: start, description: 'Start date, as year-month-day or week/month/year for this period ago.'}
+      - {name: end, description: 'End date, as year-month-day.'}
+    prerequisite: >-
+      Requires "Allow adding visitor counts on your website" to be enabled in site settings; it
+      defaults to off to prevent unintentional data leaking.
+  - name: Tracking pixel
+    kind: no-javascript-image
+    docs: https://www.goatcounter.com/help/pixel
+    invocation: '<img src="https://MYCODE.goatcounter.com/count?p=/test">'
+    detail: >-
+      The /count endpoint returns a 1x1 GIF on GET. Query parameters p (path), t (title), r (referrer),
+      e (event), q (query/campaigns), s (screen size), b (bot flag) and rnd (cache buster). The docs
+      state these parameters are guaranteed stable and that any future incompatible change will use a
+      new endpoint.
+    limitations: Cannot record referrer or screen size; increases unfiltered bot requests.
+  - name: Content-Security-Policy requirements
+    kind: integration-note
+    docs: https://www.goatcounter.com/help/csp
+    detail: >-
+      Integrations must allow gc.zgo.at in script-src and the site's own /count endpoint in img-src
+      when using the pixel fallback.
+third_party_integrations_listed:
+  source: https://www.goatcounter.com/code
+  note: >-
+    The provider's code page lists copy-paste setup for Gatsby, Publii, Schlix, WordPress and Write.as.
+    These are integration instructions on the provider's site, not first-party packages; the npm
+    plugins behind some of them are community-maintained (see packages/goatcounter-packages.yml).
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

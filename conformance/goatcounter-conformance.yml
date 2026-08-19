@@ -1,0 +1,129 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  openapi/_original/goatcounter-api-swagger20.json, https://www.goatcounter.com/help/api,
+  well-known/goatcounter-well-known.yml, security/goatcounter-domain-security.yml
+description: >-
+  Cross-cutting standards posture for GoatCounter, derived from the provider-published OpenAPI 2.0
+  document and the API documentation, plus live probes. GoatCounter is a deliberately small,
+  single-maintainer API: it implements HTTP authentication and publishes a machine-readable contract,
+  but it adopts none of the newer API conventions (problem+json, OAuth, well-known discovery,
+  standard rate-limit headers), and it holds no compliance certifications.
+standards:
+  - id: openapi-2.0
+    name: OpenAPI / Swagger 2.0
+    conforms: true
+    evidence: >-
+      The provider publishes https://www.goatcounter.com/api.json — swagger 2.0, 13 paths, 16
+      operations, 27 definitions, generated from source annotations by kommentaar (kommentaar.conf
+      is present in the repository root).
+  - id: openapi-3
+    name: OpenAPI 3.x
+    conforms: false
+    evidence: The provider's own document is Swagger 2.0; no 3.x document is published.
+  - id: rfc7235-http-auth
+    name: RFC 7235 HTTP Authentication
+    conforms: true
+    evidence: >-
+      Returns WWW-Authenticate "Basic realm=GoatCounter" on 401, observed live at
+      https://stats.arp242.net/api/v0/me on 2026-08-13.
+  - id: rfc6750-bearer
+    name: RFC 6750 Bearer Token Usage
+    conforms: true
+    evidence: 'Documented scheme is Authorization: Bearer <token>; https://www.goatcounter.com/help/api'
+  - id: oauth2
+    name: OAuth 2.0
+    conforms: false
+    evidence: No oauth2 securityDefinitions in the spec and no OAuth flow in the docs; API keys only.
+  - id: oidc
+    name: OpenID Connect
+    conforms: false
+    evidence: /.well-known/openid-configuration returns 404.
+  - id: rfc9457-problem-details
+    name: RFC 9457 Problem Details for HTTP APIs
+    conforms: false
+    evidence: >-
+      Errors use a custom envelope with an `error` string or an `errors` object, typed as
+      handlers.apiError / handlers.authError; no application/problem+json anywhere in the spec.
+  - id: rfc9116-security-txt
+    name: RFC 9116 security.txt
+    conforms: partial
+    evidence: >-
+      A security.txt is served (HTTP 200) but at the legacy document root /security.txt rather than
+      the required /.well-known/security.txt, and it carries only a Contact field — no Expires field,
+      which RFC 9116 requires.
+  - id: rfc8615-well-known
+    name: RFC 8615 Well-Known URIs
+    conforms: false
+    evidence: Every /.well-known/ path probed on both hosts returns 404. See well-known/goatcounter-well-known.yml.
+  - id: rfc8594-sunset-header
+    name: RFC 8594 Sunset HTTP Header
+    conforms: false
+    evidence: No Sunset or Deprecation headers; no deprecation policy published.
+  - id: ietf-ratelimit-headers
+    name: IETF draft RateLimit header fields
+    conforms: false
+    evidence: >-
+      Uses the older X-Rate-Limit-Limit / X-Rate-Limit-Remaining / X-Rate-Limit-Reset convention
+      rather than the RateLimit / RateLimit-Policy fields.
+  - id: idempotency-key
+    name: Idempotency-Key convention
+    conforms: false
+    evidence: No idempotency key on any of the five write operations. See conventions/goatcounter-conventions.yml.
+  - id: json-api
+    name: JSON:API
+    conforms: false
+    evidence: Plain JSON objects; no JSON:API document structure.
+  - id: pagination
+    name: Documented pagination
+    conforms: true
+    evidence: >-
+      Three documented pagination shapes (id cursor via after, offset, and exclusion-list) with a
+      `more` boolean on every collection response.
+  - id: dnssec
+    name: DNSSEC
+    conforms: true
+    evidence: security/goatcounter-domain-security.yml records dnssec true for goatcounter.com.
+  - id: caa
+    name: CAA records
+    conforms: true
+    evidence: security/goatcounter-domain-security.yml records six CAA records for goatcounter.com.
+  - id: dmarc
+    name: DMARC
+    conforms: false
+    evidence: security/goatcounter-domain-security.yml records dmarc false for goatcounter.com.
+  - id: hsts
+    name: HTTP Strict Transport Security
+    conforms: false
+    evidence: No HSTS header observed on www.goatcounter.com or goatcounter.com.
+  - id: sri
+    name: Subresource Integrity
+    conforms: true
+    evidence: >-
+      Pinned count.js builds are published with sha384 integrity hashes and crossorigin=anonymous;
+      https://www.goatcounter.com/help/countjs-versions
+  - id: csp
+    name: Content-Security-Policy
+    conforms: true
+    evidence: >-
+      A restrictive CSP is served on API responses (default-src 'none' with explicit allowances), and
+      the provider documents the CSP directives integrators need at https://www.goatcounter.com/help/csp
+  - id: gdpr
+    name: GDPR
+    conforms: claimed
+    evidence: >-
+      GoatCounter publishes a privacy policy and a GDPR consent-notice guidance page and states it does
+      not track users with unique identifiers and does not need a GDPR notice. This is a published
+      privacy posture, not a third-party certification or audit.
+    urls:
+      - https://www.goatcounter.com/help/privacy
+      - https://www.goatcounter.com/help/gdpr
+certifications:
+  published: []
+  note: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP or CSA STAR certification is published, and no trust
+    center exists (probe-security-programs.py returned trust=none). No Compliance pointer is emitted —
+    a GDPR/privacy page is not a compliance program.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

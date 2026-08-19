@@ -1,0 +1,186 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/_original/goatcounter-api-swagger20.json
+docs: https://www.goatcounter.com/api2.html
+description: >-
+  Entity-relationship graph derived from the 27 definitions in the provider-published OpenAPI 2.0
+  document. GoatCounter's data core is small and hierarchical: a Site owns Paths, a Path accumulates
+  Hits, and hit data is projected into three read shapes (HitList, HitStat, HitListStat) depending on
+  whether you are asking about paths, categories, or time buckets. Users and API tokens sit beside the
+  site tree. Identifiers are plain integers throughout — there are no prefixed string IDs.
+id_convention:
+  style: integer
+  prefixed: false
+  note: >-
+    Every id in the model is a bare integer (path_id, site_id, export id, user id). The one
+    human-readable identifier is Site.code, the subdomain label that also determines the API host —
+    code "arp242" means the API is served from arp242.goatcounter.com.
+entities:
+  - name: Site
+    schema: goatcounter.Site
+    description: A tracked website. The unit of tenancy — the API host, the API key and all data are scoped to it.
+    key: id
+    natural_key: code
+    fields: [id, code, cname, cname_setup_at, link_domain, parent, state, received_data, created_at, updated_at, first_hit_at, setttings, user_defaults]
+    operations: [GET_api_v0_sites, PUT_api_v0_sites, 'GET_api_v0_sites_{id}', 'POST_api_v0_sites_{id}', 'PATCH_api_v0_sites_{id}']
+    note: >-
+      The settings field is spelled `setttings` (three t's) in the published spec. Recorded verbatim
+      because a client must send the field name the API actually accepts.
+  - name: SiteSettings
+    schema: goatcounter.SiteSettings
+    description: Per-site collection and sharing configuration.
+    fields: [allow_bosmang, allow_counter, allow_embed, collect, collect_regions, data_retention, ignore_ips, public, secret]
+    embedded_in: Site
+  - name: User
+    schema: goatcounter.User
+    description: An account holder attached to a site.
+    key: id
+    fields: [id, email, email_verified, site, access, settings, totp_enabled, login_at, open_at, reset_at, last_report_at, created_at, updated_at]
+    operations: [GET_api_v0_me]
+  - name: UserSettings
+    schema: goatcounter.UserSettings
+    description: Per-user dashboard preferences, including saved views and widgets.
+    fields: [date_format, datepicker, email_reports, fewer_numbers, fewer_numbers_lock_until, language, number_format, sunday_starts_week, theme, timezone, twenty_four_hours, views, widgets]
+    embedded_in: User
+  - name: APIToken
+    schema: goatcounter.APIToken
+    description: The API key presented on the request, described back to its holder.
+    fields: [name, permissions, sites]
+    operations: [GET_api_v0_me]
+  - name: Path
+    schema: goatcounter.Path
+    description: A tracked URL path or named event on a site.
+    key: id
+    fields: [id, path, title, event]
+    operations: [GET_api_v0_paths]
+  - name: Hit
+    schema: handlers.APICountRequestHit
+    description: A single inbound pageview or event submitted for counting. Write-only — there is no read-back operation for an individual hit.
+    fields: [path, title, ref, event, size, bot, user_agent, language, location, ip, created_at, query, session]
+    operations: [POST_api_v0_count]
+  - name: HitList
+    schema: goatcounter.HitList
+    description: Read projection — one path with its visitor count and per-day/hour breakdown.
+    fields: [path_id, path, title, event, count, max, ref_scheme, stats]
+    operations: [GET_api_v0_stats_hits]
+  - name: HitStat
+    schema: goatcounter.HitStat
+    description: Read projection — one named bucket (browser, system, location, language, size, campaign, referrer) with a count.
+    fields: [id, name, count, ref_scheme]
+    operations: ['GET_api_v0_stats_{page}', 'GET_api_v0_stats_{page}_{id}', 'GET_api_v0_stats_hits_{path_id}']
+  - name: HitListStat
+    schema: goatcounter.HitListStat
+    description: Read projection — one day bucket with hourly, daily, weekly and monthly visitor totals.
+    fields: [day, hourly, daily, weekly, monthly]
+    operations: [GET_api_v0_stats_total, GET_api_v0_stats_hits]
+  - name: Export
+    schema: v2.Export
+    description: An asynchronous CSV or JSON export job over raw hit data.
+    key: id
+    fields: [id, site_id, format, created_at, finished_at, error, hash, size, num_rows, last_hit_id, start_from_hit_id, start_from_day]
+    operations: [POST_api_v0_export, 'GET_api_v0_export_{id}', 'GET_api_v0_export_{id}_download']
+  - name: View
+    schema: goatcounter.View
+    description: A saved dashboard view (filter, grouping, period).
+    fields: [name, filter, group, period]
+    embedded_in: UserSettings
+  - name: Zone
+    schema: tz.Zone
+    description: Timezone reference object used by user settings.
+    fields: [Zone, Abbr, CountryCode, CountryName, Comments]
+    embedded_in: UserSettings
+relationships:
+  - from: Site
+    to: Site
+    kind: belongs_to
+    via: parent
+    note: A site can be a child of another site, which is how GoatCounter models multi-domain accounts.
+  - from: Site
+    to: SiteSettings
+    kind: has_one
+    via: setttings
+  - from: Site
+    to: UserSettings
+    kind: has_one
+    via: user_defaults
+  - from: User
+    to: Site
+    kind: belongs_to
+    via: site
+  - from: User
+    to: UserSettings
+    kind: has_one
+    via: settings
+  - from: UserSettings
+    to: View
+    kind: has_many
+    via: views
+  - from: UserSettings
+    to: Zone
+    kind: has_one
+    via: timezone
+  - from: meResponse
+    to: User
+    kind: has_one
+    via: user
+  - from: meResponse
+    to: APIToken
+    kind: has_one
+    via: token
+  - from: APIToken
+    to: Site
+    kind: belongs_to
+    via: sites
+  - from: Export
+    to: Site
+    kind: belongs_to
+    via: site_id
+  - from: Export
+    to: Hit
+    kind: references
+    via: last_hit_id / start_from_hit_id
+    note: The export cursor is a hit ID, which is what makes incremental sync possible.
+  - from: HitList
+    to: Path
+    kind: belongs_to
+    via: path_id
+  - from: HitList
+    to: HitListStat
+    kind: has_many
+    via: stats
+  - from: apiCountTotalResponse
+    to: HitListStat
+    kind: has_many
+    via: stats
+  - from: apiHitsResponse
+    to: HitList
+    kind: has_many
+    via: hits
+  - from: apiPathsResponse
+    to: Path
+    kind: has_many
+    via: paths
+  - from: apiSitesResponse
+    to: Site
+    kind: has_many
+    via: sites
+  - from: apiStatsResponse
+    to: HitStat
+    kind: has_many
+    via: stats
+  - from: apiRefsResponse
+    to: HitStat
+    kind: has_many
+    via: refs
+  - from: Hit
+    to: Path
+    kind: references
+    via: path
+    note: Inbound hits name the path as a string; GoatCounter resolves or creates the Path record.
+counts:
+  definitions_in_spec: 27
+  entities_modelled: 13
+  relationships: 21
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

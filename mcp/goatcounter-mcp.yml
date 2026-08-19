@@ -1,0 +1,100 @@
+generated: '2026-08-13'
+method: derived
+status: candidate
+source: openapi/_original/goatcounter-api-swagger20.json
+description: >-
+  GoatCounter publishes no MCP server. This is a CANDIDATE tool surface derived one-to-one
+  from the operations in the provider-published OpenAPI 2.0 document at
+  https://www.goatcounter.com/api.json. It is a proposal for what an MCP server over the
+  GoatCounter API could expose; it is not something GoatCounter ships, and no endpoint is
+  asserted.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: derived
+  note: >-
+    Searched the GoatCounter docs, the arp242/goatcounter repository, npm and GitHub for a
+    first-party MCP server; none exists. The only result was rafaljanicki/goatcounter-mcp-server,
+    a third-party repository with no relationship to the provider, which is not recorded as a
+    GoatCounter surface. auth is listed as api-key because the underlying REST API takes a
+    bearer API token (see authentication/goatcounter-authentication.yml).
+server:
+  name: goatcounter
+  transport: null
+  url: null
+tools:
+  - name: count_pageviews
+    description: Send one or more pageviews or events to GoatCounter in a single batch.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#POST_api_v0_count
+    consequence: write
+  - name: create_export
+    description: Start a new background CSV export of raw pageview data.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#POST_api_v0_export
+    consequence: write
+  - name: get_export
+    description: Get details about a CSV export, including whether it has finished.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_export_{id}
+    consequence: read
+  - name: download_export
+    description: Download a finished CSV export file.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_export_{id}_download
+    consequence: read
+  - name: get_me
+    description: Get information about the current user and the API key in use.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_me
+    consequence: read
+  - name: list_paths
+    description: Get an overview of the paths tracked on this site, without statistics.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_paths
+    consequence: read
+  - name: list_sites
+    description: List all sites on this account.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_sites
+    consequence: read
+  - name: create_site
+    description: Create a new site.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#PUT_api_v0_sites
+    consequence: write
+  - name: get_site
+    description: Get information about one site.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_sites_{id}
+    consequence: read
+  - name: update_site
+    description: Update a site's cname, link_domain or settings.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#PATCH_api_v0_sites_{id}
+    consequence: write
+    note: >-
+      POST_api_v0_sites_{id} and PATCH_api_v0_sites_{id} are documented as the same update
+      operation on the same path; a single tool would back onto either.
+  - name: stats_total
+    description: Count the total number of pageviews for a date range.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_stats_total
+    consequence: read
+  - name: stats_hits
+    description: Get an overview of pageviews and visitors per path.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_stats_hits
+    consequence: read
+  - name: stats_refs
+    description: Get referral information for one path.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_stats_hits_{path_id}
+    consequence: read
+  - name: stats_by_page
+    description: Get browser, system, location, language, size, campaign or referrer stats.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_stats_{page}
+    consequence: read
+  - name: stats_by_page_detail
+    description: Get detailed stats for one ID within a category, such as a browser version.
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_stats_{page}_{id}
+    consequence: read
+coverage:
+  rest_operations_total: 16
+  tools_proposed: 15
+  note: >-
+    16 documented operations map to 15 proposed tools because the POST and PATCH site-update
+    operations are the same capability on the same path.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

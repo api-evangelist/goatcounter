@@ -1,12 +1,87 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/goatcounter-openapi.yml
+generated: '2026-08-13'
+method: searched
+source: openapi/_original/goatcounter-api-swagger20.json
+docs: https://www.goatcounter.com/help/api
+description: >-
+  GoatCounter authenticates the JSON API with a per-site API key. The primary documented scheme
+  is an HTTP bearer token in the Authorization header; HTTP Basic is also accepted with an empty
+  username and the API key as the password, which the docs describe as mostly useful for testing
+  from a browser. Note that the provider-published OpenAPI 2.0 document declares only basicAuth
+  under securityDefinitions, so the bearer scheme — the one the docs lead with — is documented in
+  prose but absent from the machine-readable contract. Both are recorded here.
 summary:
   types:
-  - http
+    - http
+  http_schemes:
+    - bearer
+    - basic
+  api_key_in: [header]
+  oauth2_flows: []
+  oauth2: false
+  openid_connect: false
+  mutual_tls: false
 schemes:
-- name: bearerAuth
-  type: http
-  scheme: bearer
-  sources:
-  - openapi/goatcounter-openapi.yml
+  - name: bearerAuth
+    type: http
+    scheme: bearer
+    in: header
+    parameter: Authorization
+    format: 'Authorization: Bearer <token>'
+    documented: true
+    in_spec: false
+    sources:
+      - https://www.goatcounter.com/help/api
+      - openapi/goatcounter-users-api-openapi.yml
+    note: >-
+      The documented primary scheme. Present in the API Evangelist refined OpenAPI files but not
+      in the provider's own api.json, whose securityDefinitions contains basicAuth only.
+  - name: basicAuth
+    type: http
+    scheme: basic
+    in: header
+    parameter: Authorization
+    documented: true
+    in_spec: true
+    username: '(leave empty)'
+    password: 'the API key'
+    sources:
+      - openapi/_original/goatcounter-api-swagger20.json
+      - https://www.goatcounter.com/help/api
+    evidence:
+      probed: '2026-08-13'
+      url: https://stats.arp242.net/api/v0/me
+      response_header: 'www-authenticate: Basic realm=GoatCounter'
+credential:
+  kind: api-key
+  name: API key / API token
+  issuance: >-
+    Created by the account holder in the GoatCounter dashboard under [Username in top menu] -> API.
+  scope: per-site
+  rotation: self-serve (create and delete keys in the dashboard)
+  oauth: false
+  note: >-
+    There is no OAuth or OIDC surface, so there is no scopes/ artifact for this provider. Keys carry
+    a permissions set instead — see permissions below.
+permissions:
+  model: per-key permission flags
+  discoverable_at: GET /api/v0/me
+  schema: goatcounter.APIToken (fields name, permissions, sites)
+  source: openapi/_original/goatcounter-api-swagger20.json
+  note: >-
+    The published OpenAPI types the APIToken object with a permissions field, and the docs state that
+    a key without the needed permission gets 403 Forbidden, but the individual permission names are
+    not enumerated in the public documentation or in the spec. Not guessed here.
+failure_modes:
+  - status: 401
+    condition: API key missing or incorrect
+    source: https://www.goatcounter.com/help/api
+  - status: 403
+    condition: API key valid but lacks the needed permissions
+    source: https://www.goatcounter.com/help/api
+transport:
+  https_required: true
+  content_type: application/json
+  note: All requests must set Content-Type application/json; all responses are JSON unless noted otherwise.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

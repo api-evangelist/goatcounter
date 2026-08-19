@@ -1,0 +1,116 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://github.com/arp242/goatcounter (first-party repository),
+  https://proxy.golang.org/zgo.at/goatcounter/v2/@latest,
+  https://hub.docker.com/v2/repositories/arp242/goatcounter/,
+  https://www.goatcounter.com/help/countjs-versions
+description: >-
+  GoatCounter ships no conventional per-language API client SDK. The first-party
+  distributions are the Go module / self-hosted server binary (which also carries the
+  CLI), the official Docker image, and the browser tracking script count.js served
+  from the provider's own CDN host gc.zgo.at. Every goatcounter package on npm is a
+  third-party framework plugin (Docusaurus, Next.js, Gatsby, VuePress) authored by
+  community maintainers, not by GoatCounter, so none is marked official.
+registries_checked:
+  - registry: npm
+    result: no first-party package (community framework plugins only)
+  - registry: pypi
+    result: 404 for goatcounter, goatcounter-api, py-goatcounter
+  - registry: rubygems
+    result: 404 for goatcounter
+  - registry: crates.io
+    result: no first-party crate
+  - registry: pkg.go.dev / proxy.golang.org
+    result: first-party module found
+packages:
+  - language: go
+    registry: go
+    name: zgo.at/goatcounter/v2
+    url: https://pkg.go.dev/zgo.at/goatcounter/v2
+    install: go install zgo.at/goatcounter/v2/cmd/goatcounter@latest
+    official: true
+    version: v2.7.0
+    published: '2025-12-15'
+    kind: server+cli
+    note: >-
+      The Go module is the GoatCounter application itself (self-hosted server plus the
+      goatcounter CLI documented in cli/goatcounter-cli.yml), not an API client library.
+      Version and date read from https://proxy.golang.org/zgo.at/goatcounter/v2/@latest.
+  - language: n/a
+    registry: docker
+    name: arp242/goatcounter
+    url: https://hub.docker.com/r/arp242/goatcounter
+    install: docker pull arp242/goatcounter
+    official: true
+    version: v2.7.0
+    published: '2025-12-15'
+    kind: container
+    note: >-
+      Official container image (Docker Hub description states "Official images"); last
+      pushed 2025-12-15, matching the v2.7.0 GitHub release. Tag list is not enumerated
+      here; version taken from the matching release.
+  - language: javascript
+    registry: cdn
+    name: count.js
+    url: https://gc.zgo.at/count.js
+    install: '<script data-goatcounter="https://MYCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>'
+    official: true
+    version: null
+    published: null
+    kind: browser-script
+    note: >-
+      Unpinned CDN distribution. The documented default src //gc.zgo.at/count.js floats
+      to latest and carries no version in the URL and no registry metadata endpoint, so a
+      consumer cannot tell which build they are served either — that is the finding, not a
+      gap in this check. Pinned, SRI-verifiable builds are published alongside it (see the
+      next entry).
+  - language: javascript
+    registry: cdn
+    name: count.v5.js
+    url: https://gc.zgo.at/count.v5.js
+    install: '<script data-goatcounter="https://MYCODE.goatcounter.com/count" async src="//gc.zgo.at/count.v5.js" crossorigin="anonymous" integrity="sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ"></script>'
+    official: true
+    version: v5
+    published: '2025-06-09'
+    kind: browser-script
+    integrity: sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ
+    note: >-
+      Pinned, immutable build for subresource integrity. Version string and release date
+      read verbatim from https://www.goatcounter.com/help/countjs-versions ("v5 (9 June
+      2025)"). Earlier pinned builds v4 (2023-12-08) and v3 (2021-12-01) remain served.
+  - language: n/a
+    registry: github-releases
+    name: goatcounter (static binaries)
+    url: https://github.com/arp242/goatcounter/releases
+    install: download the statically compiled binary for your platform
+    official: true
+    version: v2.7.0
+    published: '2025-12-15'
+    kind: binary
+    note: Release date read from the GitHub releases API for arp242/goatcounter.
+third_party_seen:
+  - registry: npm
+    name: docusaurus-plugin-goatcounter
+    version: 4.0.0
+    published: '2024-12-18'
+    official: false
+  - registry: npm
+    name: next-goatcounter
+    version: 1.0.6
+    published: '2024-11-24'
+    official: false
+  - registry: npm
+    name: gatsby-plugin-goatcounter
+    version: 0.4.0
+    published: '2020-08-10'
+    official: false
+  - registry: npm
+    name: goatcounter-js
+    version: 1.0.0
+    published: '2024-08-06'
+    official: false
+    note: Self-described as "An (unofficial) JavaScript library".
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

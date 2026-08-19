@@ -1,0 +1,97 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://www.goatcounter.com/help/api,
+  https://raw.githubusercontent.com/arp242/goatcounter/main/CHANGELOG.md,
+  https://www.goatcounter.com/status
+description: >-
+  Versioning, stability and operational-transparency posture for the GoatCounter JSON API.
+  GoatCounter is a single-maintainer open-source project with a dated CHANGELOG, tagged releases,
+  and a live machine-readable status endpoint, but no formal deprecation policy, no Sunset/Deprecation
+  header support, and no SLA.
+versioning:
+  scheme: uri-path
+  current: v0
+  versioned: false
+  path_prefix: /api/v0
+  docs: https://www.goatcounter.com/help/api
+  statement: >-
+    Quoted from the API help page: "The API is currently unversioned and prefixed with /api/v0;
+    breaking changes will be avoided and are not expected but may occur. I'll be sure to send ample
+    notification of this to everyone who has generated an API key."
+  note: >-
+    A stability commitment plus a promise to notify key holders. It is not a published deprecation
+    policy — there is no notice period, no sunset window and no deprecation page — so no Deprecation
+    pointer is emitted for this provider.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+deprecated_elements:
+  - kind: parameter
+    name: daily
+    operation: GET /api/v0/stats/hits
+    source: openapi/_original/goatcounter-api-swagger20.json
+    statement: 'Deprecated: identical to group=day and will be removed in the future.'
+    replacement: group=day
+  - kind: setting
+    name: window.goatcounter.vars / window.counter
+    surface: count.js
+    source: https://www.goatcounter.com/help/countjs-versions
+    statement: >-
+      Removed in count.js v5; replaced by window.goatcounter / data-goatcounter-settings and the
+      data-goatcounter attribute.
+  - kind: flag
+    name: '-websocket'
+    surface: goatcounter serve
+    source: https://raw.githubusercontent.com/arp242/goatcounter/main/CHANGELOG.md
+    statement: WebSocket support is detected automatically as of v2.7.0; the flag is now a no-op.
+deprecated_operations: []
+release_cadence:
+  tagged_releases: true
+  latest: v2.7.0
+  latest_date: '2025-12-15'
+  previous: v2.6.0 (2025-06-08), v2.5.0 (2023-12-10), v2.4.1 (2022-11-15)
+  source: https://github.com/arp242/goatcounter/releases
+  note: >-
+    Roughly one tagged release every 6-18 months. The hosted service does not run the tags —
+    the CHANGELOG states "The goatcounter.com service generally runs the latest commit on the
+    main branch", so hosted behaviour can lead the newest tag.
+status_page:
+  url: https://www.goatcounter.com/status
+  kind: machine-readable service status endpoint
+  format: application/json
+  fields_returned: [GOARCH, GOOS, cgo, database, go, race, uptime, version]
+  incident_history: false
+  subscribe: false
+  evidence:
+    probed: '2026-08-13'
+    url: https://www.goatcounter.com/status
+    http_status: 200
+    content_type: application/json
+  note: >-
+    This is a live status resource the provider serves — it reports process uptime, the running build
+    version and the database in use — but it is a health/build endpoint, not an incident-history
+    status page with subscriptions or postmortems. Recorded precisely so the difference is visible.
+sla:
+  published: false
+  url: null
+  uptime_target: null
+  note: >-
+    No SLA. The hosted service is free and donation-supported (see plans/goatcounter-plans-pricing.yml),
+    and the provider directs serious/commercial use to self-hosting.
+support:
+  channels:
+    - kind: email
+      value: support@goatcounter.com
+    - kind: issues
+      value: https://github.com/arp242/goatcounter/issues
+      note: The docs explicitly invite support requests and general questions as public GitHub issues.
+    - kind: form
+      value: https://www.goatcounter.com/contact
+changelog: changelog/goatcounter-changelog.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

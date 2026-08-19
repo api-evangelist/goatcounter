@@ -1,0 +1,85 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://raw.githubusercontent.com/arp242/goatcounter/main/cmd/goatcounter/help.go (usageTop),
+  https://raw.githubusercontent.com/arp242/goatcounter/main/README.md,
+  https://www.goatcounter.com/help/api
+name: goatcounter
+description: >-
+  GoatCounter ships a single first-party CLI: the `goatcounter` binary. It is the same artifact as
+  the self-hosted server — one static Go binary that runs the service, manages the database,
+  imports pageviews, and reads dashboard statistics from the terminal. It is an operator tool
+  rather than an API client, with one exception: `goatcounter dashboard` is the reference consumer
+  of the /api/v0/stats/* endpoints and the GoatCounter docs point API users at it as the worked
+  example for loading statistics.
+usage: goatcounter [command] [flags]
+install:
+  - method: binary
+    detail: Statically compiled binaries for several platforms, no dependencies beyond SQLite or PostgreSQL.
+    url: https://github.com/arp242/goatcounter/releases
+  - method: go
+    command: go install zgo.at/goatcounter/v2/cmd/goatcounter@latest
+    url: https://pkg.go.dev/zgo.at/goatcounter/v2
+  - method: docker
+    command: docker run --rm arp242/goatcounter help serve
+    url: https://hub.docker.com/r/arp242/goatcounter
+commands:
+  - name: help
+    group: general
+    description: Show help; use "help <topic>" or "help all" for more details.
+  - name: version
+    group: general
+    description: Show version and build information and exit.
+  - name: serve
+    group: server
+    description: Start the HTTP server.
+    example: goatcounter serve -listen=:443 -tls=tls,rdr,acme
+    key_flags: [-listen, -tls, -db, -ratelimit, -geodb, -smtp, -debug]
+  - name: import
+    group: data
+    description: Import pageviews from an export or a logfile.
+    detail: >-
+      Parses nginx, Apache, Caddy, CloudFront and other HTTP server logfiles; works against both the
+      hosted goatcounter.com service and a self-hosted instance.
+  - name: dashboard
+    group: data
+    description: Show dashboard statistics in the terminal.
+    api_client: true
+    detail: >-
+      The GoatCounter API help page names this command as the worked example for consuming the
+      /api/v0/stats/* endpoints, in place of a shell script.
+  - name: db
+    group: database
+    description: Modify the database and print database info.
+    subcommands:
+      - name: db create site
+        example: goatcounter db create site -vhost=stats.example.com -user.email=me@example.com
+      - name: db create user
+      - name: db migrate
+  - name: monitor
+    group: operations
+    description: Monitor for pageviews.
+help_topics:
+  - name: listen
+    description: Detailed documentation on the -listen and -tls flags.
+  - name: logfile
+    description: Documentation on importing from logfiles.
+  - name: debug
+    description: List of modules accepted by the -debug flag.
+flows:
+  - name: Stand up a self-hosted instance
+    steps:
+      - goatcounter serve
+      - goatcounter db create site -vhost=stats.example.com -user.email=me@example.com
+      - goatcounter serve -listen=:443 -tls=tls,rdr,acme
+  - name: Backfill from server logs
+    steps:
+      - goatcounter help logfile
+      - goatcounter import
+  - name: Read stats without writing an API client
+    steps:
+      - goatcounter dashboard
+package: packages/goatcounter-packages.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

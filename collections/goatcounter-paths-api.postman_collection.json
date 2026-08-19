@@ -1,0 +1,129 @@
+{
+  "item": [
+    {
+      "id": "b2113db5-a066-46fc-8d1e-519440bedcf0",
+      "name": "Paths",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b1595796-f4b5-49d1-8825-77d452c285db",
+          "name": "List paths",
+          "request": {
+            "name": "List paths",
+            "description": {
+              "content": "Get an overview of all tracked paths on the site.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "paths"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "after",
+                  "value": "<integer>"
+                }
+              ],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a8464113-5e0e-40ed-9bef-6b562d7c0015",
+              "name": "Paths overview.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "paths"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://goatcounter.com/api/v0",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "24198ee8-792d-4649-87eb-4112151d83ea",
+    "name": "GoatCounter Exports Paths API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The GoatCounter API can be used to manage sites, users, count pageviews, export raw data, retrieve statistics, and build custom dashboards on top of GoatCounter web analytics.\n\nContact Support:\n Name: GoatCounter",
+      "type": "text/plain"
+    }
+  }
+}

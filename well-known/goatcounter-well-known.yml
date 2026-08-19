@@ -1,0 +1,70 @@
+generated: '2026-08-13'
+method: probed
+source: live HTTP probes of the GoatCounter website and API hosts
+description: >-
+  Probe of the RFC 8615 /.well-known/ discovery surface on every GoatCounter host named in
+  apis.yml and in the provider-published OpenAPI. Every /.well-known/ path returns 404 with
+  the site's HTML 404 page. GoatCounter does serve a real RFC 9116 security.txt, but at the
+  legacy document-root location /security.txt rather than the canonical
+  /.well-known/security.txt, so that document is recorded here with its true path.
+hosts_probed:
+  - https://www.goatcounter.com
+  - https://goatcounter.com
+documents:
+  - host: www.goatcounter.com
+    path: /.well-known/security.txt
+    status: 404
+    content_type: text/html
+  - host: goatcounter.com
+    path: /.well-known/security.txt
+    status: 404
+    content_type: text/html
+  - host: www.goatcounter.com
+    path: /security.txt
+    status: 200
+    content_type: text/plain
+    file: goatcounter-security.txt
+    canonical: false
+    note: >-
+      Real RFC 9116 document served at the legacy document-root path. Body is a single
+      Contact field; it carries no Expires, Policy, Encryption or Preferred-Languages field,
+      so it does not fully satisfy RFC 9116.
+  - host: www.goatcounter.com
+    path: /.well-known/openid-configuration
+    status: 404
+  - host: www.goatcounter.com
+    path: /.well-known/oauth-authorization-server
+    status: 404
+  - host: www.goatcounter.com
+    path: /.well-known/api-catalog
+    status: 404
+  - host: www.goatcounter.com
+    path: /.well-known/ai-plugin.json
+    status: 404
+  - host: www.goatcounter.com
+    path: /.well-known/agent-card.json
+    status: 404
+  - host: www.goatcounter.com
+    path: /.well-known/agent.json
+    status: 404
+  - host: goatcounter.com
+    path: /.well-known/agent-card.json
+    status: 404
+  - host: goatcounter.com
+    path: /.well-known/agent.json
+    status: 404
+findings:
+  well_known_documents_served: 0
+  security_txt_served: true
+  security_txt_canonical_path: false
+  agent_card_found: false
+pointers_emitted:
+  - type: SecurityTxt
+    reason: >-
+      A real security.txt document is served by the provider (HTTP 200, text/plain) and is
+      saved verbatim in this directory. No WellKnown pointer is emitted, because every
+      /.well-known/ path probed returned 404 — a WellKnown pointer would assert a discovery
+      surface GoatCounter does not serve.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

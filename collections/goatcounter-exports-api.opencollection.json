@@ -1,0 +1,75 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GoatCounter Exports API",
+    "version": "0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Exports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create CSV export",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://goatcounter.com/api/v0/export",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Start a new export of raw pageview data to CSV."
+        },
+        {
+          "info": {
+            "name": "Get export info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/export/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get export info"
+        },
+        {
+          "info": {
+            "name": "Download export",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/export/:id/download",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Download export"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

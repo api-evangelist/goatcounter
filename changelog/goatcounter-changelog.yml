@@ -1,0 +1,77 @@
+generated: '2026-08-13'
+method: searched
+source: https://raw.githubusercontent.com/arp242/goatcounter/main/CHANGELOG.md
+docs: https://github.com/arp242/goatcounter/blob/main/CHANGELOG.md
+releases: https://github.com/arp242/goatcounter/releases
+description: >-
+  GoatCounter maintains a dated, hand-written CHANGELOG.md in its repository, organised by release
+  with Features / Fixes / Changes-in-defaults sections and an "unreleased" block at the top. The
+  file itself states it is not comprehensive — it lists new features and major changes, not every
+  minor bugfix — and that "the goatcounter.com service generally runs the latest commit on the main
+  branch", so hosted behaviour can precede a tagged release. Recent window only; the full history
+  lives at the source URL.
+scheme: semver
+current_version: v2.7.0
+current_version_date: '2025-12-15'
+entries:
+  - version: unreleased
+    date: null
+    breaking:
+      - >-
+        The default PostgreSQL container in compose.yaml was upgraded from PostgreSQL 17 to 18,
+        requiring a dump/restore or pg_upgrade.
+    additions:
+      - Allow grouping charts by week and month, in addition to hour and day.
+      - New JSON export/import, more convenient than the CSV export for most use cases.
+      - New Server Management -> GeoIP page to debug GeoIP lookups.
+      - Password for a new user can be read from stdin with `goatcounter db create site|user`.
+      - Allow sorting the page-sizes chart by count instead of screen size.
+      - Add `language` as a field for /api/v0/count.
+    fixes:
+      - Improve filter performance with hundreds of thousands of paths.
+      - >-
+        Add an additional "api2" rate limit defaulting to 500 requests per hour, disableable with
+        -ratelimit api2:none.
+      - Fix a websocket cache leaking memory and connections.
+    api_relevant:
+      - New `language` field on /api/v0/count.
+      - New 500 requests/hour api2 rate limit (see rate-limits/goatcounter-rate-limits.yml).
+  - version: v2.7.0
+    date: '2025-12-15'
+    breaking: []
+    additions:
+      - '-geodb now accepts maxmind:account_id:license to auto-download GeoIP updates.'
+      - Automatically detect `secure` and `sameSite` cookie attributes from the client connection.
+      - WebSocket support is detected automatically; the -websocket flag is now a no-op.
+      - Store bot pageviews in a new `bots` table for 30 days.
+      - Read GOATCOUNTER_TMPDIR as an alternative to TMPDIR.
+      - PostgreSQL 17 in compose.yaml, with less conservative settings.
+      - '-smtp now supports smtps:// URLs and a ?debug=1 flag; new Server Management -> Email page.'
+  - version: v2.6.0
+    date: '2025-06-08'
+    breaking:
+      - >-
+        Default -listen and -tls changed from ":443" / "tls,rdr,acme" to ":8080" / "none".
+      - Default SQLite database moved from ./db/goatcounter.sqlite3 to ./goatcounter-data/db.sqlite3.
+      - Default ACME secrets moved from ./acme-secrets to ./goatcounter-data/acme-secrets.
+      - count.js no longer checks window.goatcounter.vars or window.counter.
+      - >-
+        Individual pageviews are no longer stored in the `hits` table by default, which means CSV
+        export of individual pageviews is unavailable unless re-enabled under Settings -> Data
+        Collection -> Individual pageviews. Aggregate data remains available via the API.
+      - Requires Go 1.21.
+  - version: v2.5.0
+    date: '2023-12-10'
+  - version: v2.4.1
+    date: '2022-11-15'
+  - version: v2.4.0
+    date: '2022-11-08'
+  - version: v2.3.0
+    date: '2022-10-17'
+window:
+  entries_captured: 7
+  earliest_in_file: v1.4.1 (2020-09-04)
+  note: Only the recent window is structured here; the source file carries history back to 2020.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

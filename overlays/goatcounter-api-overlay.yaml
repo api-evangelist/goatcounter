@@ -1,0 +1,112 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the GoatCounter API
+  version: 1.0.0
+extends: openapi/_original/goatcounter-api-swagger20.json
+x-provenance:
+  generated: '2026-08-13'
+  method: generated
+  source: >-
+    Enhancements derived from https://www.goatcounter.com/help/api and from live probes on
+    2026-08-13. The target document is GoatCounter's own Swagger 2.0 at
+    https://www.goatcounter.com/api.json, saved verbatim in openapi/_original/. It is never
+    mutated — everything API Evangelist adds is expressed here as overlay actions.
+  note: >-
+    The single most consequential gap in the published document is that it declares no host and no
+    basePath, so a client cannot learn from the contract where to send a request. The first action
+    below supplies the real per-site host pattern that the documentation states in prose. The second
+    supplies the bearer scheme, which the documentation leads with but which is absent from
+    securityDefinitions (only basicAuth is declared there).
+actions:
+  - target: $
+    description: >-
+      Supply the host, basePath and scheme the published document omits. GoatCounter serves the API
+      from the account's own subdomain; www.goatcounter.com/api/v0/me returns 404 and
+      goatcounter.com/api/v0/me returns 301, both probed 2026-08-13.
+    update:
+      host: '{code}.goatcounter.com'
+      basePath: /api/v0
+      schemes:
+        - https
+      x-host-template:
+        variable: code
+        description: >-
+          The site's domain code, the same label that forms the subdomain — code "arp242" means
+          arp242.goatcounter.com. Self-hosted instances substitute their own hostname entirely.
+        source: https://www.goatcounter.com/help/api
+  - target: $.securityDefinitions
+    description: >-
+      Add the bearer scheme documented on the API help page. The published document declares only
+      basicAuth, so an agent reading the contract alone would miss the primary auth method.
+    update:
+      bearerAuth:
+        type: apiKey
+        name: Authorization
+        in: header
+        description: >-
+          'Authorization: Bearer <token>'. Create a key in the GoatCounter dashboard under
+          [Username in top menu] -> API. Swagger 2.0 has no native bearer type, so this is expressed
+          as an apiKey in the Authorization header. Documented at https://www.goatcounter.com/help/api
+  - target: $.info
+    description: Attach the API Evangelist profile and the artifacts derived from this contract.
+    update:
+      x-apievangelist-profile: https://apis.io/provider/goatcounter/
+      x-apievangelist-artifacts:
+        authentication: authentication/goatcounter-authentication.yml
+        conventions: conventions/goatcounter-conventions.yml
+        errors: errors/goatcounter-problem-types.yml
+        data_model: data-model/goatcounter-data-model.yml
+        lifecycle: lifecycle/goatcounter-lifecycle.yml
+        rate_limits: rate-limits/goatcounter-rate-limits.yml
+        skills: skills/_index.yml
+  - target: $
+    description: >-
+      Document the rate-limit response headers, observed live on 2026-08-13. They are described in
+      prose on the help page but appear nowhere in the contract.
+    update:
+      x-rate-limit:
+        limit: 4
+        unit: requests_per_second
+        headers:
+          X-Rate-Limit-Limit: Number of requests at which the rate limit kicks in; always the same.
+          X-Rate-Limit-Remaining: Requests remaining this period.
+          X-Rate-Limit-Reset: Seconds until the rate limit resets.
+        exhaustion_status: undocumented
+        source: https://www.goatcounter.com/help/api
+  - target: $
+    description: >-
+      Document the error envelope contract stated on the help page — the invariant that a 4xx/5xx
+      always carries either `error` or `errors` but never both is not expressible in the schemas.
+    update:
+      x-error-envelope:
+        shapes:
+          - {field: error, type: string, example: '{"error": "oh noes!"}'}
+          - {field: errors, type: object, example: '{"errors": {"key": ["error1", "error2"]}}'}
+        invariants:
+          - A 2xx status will never contain errors.
+          - A 4xx or 5xx status will always have either error or errors, but never both.
+        rfc9457: false
+        source: https://www.goatcounter.com/help/api
+  - target: $
+    description: State the absence of an idempotency contract, so an agent does not assume retry safety.
+    update:
+      x-idempotency:
+        supported: false
+        note: >-
+          No idempotency key on any write operation. Retrying POST /api/v0/count will double-count
+          the batch; retries must be guarded client-side.
+  - target: $.paths['/api/v0/stats/hits'].get.parameters[?(@.name=='daily')]
+    description: >-
+      Mark the daily parameter deprecated. The published document already says so in its description
+      ("Deprecated: identical to group=day and will be removed in the future") but does not set the
+      machine-readable flag, so tooling does not surface it.
+    update:
+      x-deprecated: true
+      x-replaced-by: group=day
+  - target: $.paths['/api/v0/export/{id}/download'].get.responses['202']
+    description: >-
+      Clarify that 202 on the download endpoint is a not-ready signal in an async poll loop, not a
+      success. This is the one place in the API where a 2xx carries the error envelope.
+    update:
+      x-async-pending: true
+      x-poll: GET /api/v0/export/{id} until finished_at is non-null

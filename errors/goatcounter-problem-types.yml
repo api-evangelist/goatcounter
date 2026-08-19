@@ -1,0 +1,93 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://www.goatcounter.com/help/api (Errors section) and
+  openapi/_original/goatcounter-api-swagger20.json
+format: custom
+rfc9457: false
+description: >-
+  GoatCounter does not use RFC 9457 problem+json. It defines its own two-shape error
+  envelope, documented in prose on the API help page and typed in the provider-published
+  OpenAPI as handlers.apiError and handlers.authError. Every one of the 16 documented
+  operations declares exactly the same three failure responses — 400, 401 and 403 — so the
+  error surface is uniform across the whole API.
+envelope:
+  content_type: application/json
+  shapes:
+    - name: single
+      field: error
+      type: string
+      schema: handlers.apiError
+      example: '{"error": "oh noes!"}'
+      description: A single human-readable error string.
+    - name: field_errors
+      field: errors
+      type: object
+      schema: handlers.apiError
+      example: '{"errors": {"key": ["error1", "error2"], "another": ["oh noes!"]}}'
+      description: >-
+        An object keyed by field name, each value a list of error strings. Used for
+        validation failures.
+    - name: auth
+      field: Error
+      type: string
+      schema: handlers.authError
+      description: Authentication and authorization failures use a separate envelope with a capitalised Error field.
+  rules:
+    - A 2xx status will never contain errors.
+    - A 4xx or 5xx status will always have either error or errors, but never both.
+    - There may be additional data in other fields alongside the error.
+  source: https://www.goatcounter.com/help/api
+problems:
+  - status: 400
+    title: Bad Request
+    schema: handlers.apiError
+    envelope_field: error | errors
+    remediation: >-
+      The request body or query parameters failed validation. Read the errors object for the
+      offending field names; correct and retry. Requests must set Content-Type: application/json.
+    applies_to: all 16 operations
+  - status: 401
+    title: Unauthorized
+    schema: handlers.authError
+    envelope_field: Error
+    observed_body: '{"error":"no Authorization header"}'
+    remediation: >-
+      The API key is missing or incorrect. Send it as `Authorization: Bearer <token>`, or use
+      HTTP Basic with an empty username and the key as the password. Create a key under
+      [Username in top menu] -> API.
+    applies_to: all 16 operations
+    evidence:
+      probed: '2026-08-13'
+      url: https://stats.arp242.net/api/v0/me
+      http_status: 401
+  - status: 403
+    title: Forbidden
+    schema: handlers.authError
+    envelope_field: Error
+    remediation: >-
+      The API key is valid but lacks the required permission. Token permissions are listed on
+      the goatcounter.APIToken object returned by GET /api/v0/me; regenerate the key with the
+      needed permissions.
+    applies_to: all 16 operations
+  - status: 202
+    title: Export not finished
+    schema: handlers.apiError
+    source_operation: openapi/_original/goatcounter-api-swagger20.json#GET_api_v0_export_{id}_download
+    remediation: >-
+      Not a failure, but the download endpoint returns 202 with the error envelope while the
+      background export is still running. Poll GET /api/v0/export/{id} until finished_at is
+      non-null before downloading.
+    applies_to: GET /api/v0/export/{id}/download
+not_documented:
+  - status: 429
+    note: >-
+      The API enforces a rate limit of 4 requests/second and signals it with X-Rate-Limit-*
+      response headers (see rate-limits/goatcounter-rate-limits.yml), but no 429 response is
+      declared in the OpenAPI and the help page does not state the status code returned on
+      exhaustion. Recorded as a documentation gap, not inferred.
+  - status: 5xx
+    note: No 5xx response is declared on any operation in the published OpenAPI.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

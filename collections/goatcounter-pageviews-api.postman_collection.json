@@ -1,0 +1,226 @@
+{
+  "item": [
+    {
+      "id": "be80d366-de8b-4d3c-88f0-584f7e779554",
+      "name": "Pageviews",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f6bcbef6-57e3-4ddd-91d1-7a4c1f589671",
+          "name": "Count pageviews",
+          "request": {
+            "name": "Count pageviews",
+            "description": {
+              "content": "Send one or more pageview events to GoatCounter for tracking. Accepts a batch of hits per request.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "count"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"no_sessions\": \"<boolean>\",\n  \"hits\": [\n    {\n      \"path\": \"<string>\",\n      \"title\": \"<string>\",\n      \"ref\": \"<string>\",\n      \"event\": \"<boolean>\",\n      \"size\": [\n        \"<number>\",\n        \"<number>\"\n      ],\n      \"bot\": \"<integer>\",\n      \"user_agent\": \"<string>\",\n      \"location\": \"<string>\",\n      \"ip\": \"<string>\",\n      \"created_at\": \"<dateTime>\",\n      \"query\": \"<string>\",\n      \"session\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"title\": \"<string>\",\n      \"ref\": \"<string>\",\n      \"event\": \"<boolean>\",\n      \"size\": [\n        \"<number>\",\n        \"<number>\"\n      ],\n      \"bot\": \"<integer>\",\n      \"user_agent\": \"<string>\",\n      \"location\": \"<string>\",\n      \"ip\": \"<string>\",\n      \"created_at\": \"<dateTime>\",\n      \"query\": \"<string>\",\n      \"session\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "de65d84f-36ff-46a6-b331-72c5db04273a",
+              "name": "Hits accepted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"no_sessions\": \"<boolean>\",\n  \"hits\": [\n    {\n      \"path\": \"<string>\",\n      \"title\": \"<string>\",\n      \"ref\": \"<string>\",\n      \"event\": \"<boolean>\",\n      \"size\": [\n        \"<number>\",\n        \"<number>\"\n      ],\n      \"bot\": \"<integer>\",\n      \"user_agent\": \"<string>\",\n      \"location\": \"<string>\",\n      \"ip\": \"<string>\",\n      \"created_at\": \"<dateTime>\",\n      \"query\": \"<string>\",\n      \"session\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"title\": \"<string>\",\n      \"ref\": \"<string>\",\n      \"event\": \"<boolean>\",\n      \"size\": [\n        \"<number>\",\n        \"<number>\"\n      ],\n      \"bot\": \"<integer>\",\n      \"user_agent\": \"<string>\",\n      \"location\": \"<string>\",\n      \"ip\": \"<string>\",\n      \"created_at\": \"<dateTime>\",\n      \"query\": \"<string>\",\n      \"session\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "4286bbfc-558d-4c7b-8c3f-3f4033cf2c1f",
+              "name": "Bad request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"no_sessions\": \"<boolean>\",\n  \"hits\": [\n    {\n      \"path\": \"<string>\",\n      \"title\": \"<string>\",\n      \"ref\": \"<string>\",\n      \"event\": \"<boolean>\",\n      \"size\": [\n        \"<number>\",\n        \"<number>\"\n      ],\n      \"bot\": \"<integer>\",\n      \"user_agent\": \"<string>\",\n      \"location\": \"<string>\",\n      \"ip\": \"<string>\",\n      \"created_at\": \"<dateTime>\",\n      \"query\": \"<string>\",\n      \"session\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"title\": \"<string>\",\n      \"ref\": \"<string>\",\n      \"event\": \"<boolean>\",\n      \"size\": [\n        \"<number>\",\n        \"<number>\"\n      ],\n      \"bot\": \"<integer>\",\n      \"user_agent\": \"<string>\",\n      \"location\": \"<string>\",\n      \"ip\": \"<string>\",\n      \"created_at\": \"<dateTime>\",\n      \"query\": \"<string>\",\n      \"session\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "f0a83db6-b161-48ea-b446-24a95158f634",
+              "name": "Unauthorized.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"no_sessions\": \"<boolean>\",\n  \"hits\": [\n    {\n      \"path\": \"<string>\",\n      \"title\": \"<string>\",\n      \"ref\": \"<string>\",\n      \"event\": \"<boolean>\",\n      \"size\": [\n        \"<number>\",\n        \"<number>\"\n      ],\n      \"bot\": \"<integer>\",\n      \"user_agent\": \"<string>\",\n      \"location\": \"<string>\",\n      \"ip\": \"<string>\",\n      \"created_at\": \"<dateTime>\",\n      \"query\": \"<string>\",\n      \"session\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"title\": \"<string>\",\n      \"ref\": \"<string>\",\n      \"event\": \"<boolean>\",\n      \"size\": [\n        \"<number>\",\n        \"<number>\"\n      ],\n      \"bot\": \"<integer>\",\n      \"user_agent\": \"<string>\",\n      \"location\": \"<string>\",\n      \"ip\": \"<string>\",\n      \"created_at\": \"<dateTime>\",\n      \"query\": \"<string>\",\n      \"session\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://goatcounter.com/api/v0",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "09e781c1-9b17-4691-aaf7-dbf6b146f3cf",
+    "name": "GoatCounter Exports Pageviews API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The GoatCounter API can be used to manage sites, users, count pageviews, export raw data, retrieve statistics, and build custom dashboards on top of GoatCounter web analytics.\n\nContact Support:\n Name: GoatCounter",
+      "type": "text/plain"
+    }
+  }
+}

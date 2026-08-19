@@ -1,0 +1,135 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://www.goatcounter.com/help/api and openapi/_original/goatcounter-api-swagger20.json
+description: >-
+  Cross-cutting request/response semantics for the GoatCounter JSON API, read from the provider's
+  API help page and the OpenAPI 2.0 document it links to. GoatCounter is a small, uniform API:
+  one auth model, one error envelope, one rate limit, and three different pagination shapes
+  depending on the collection.
+authentication:
+  style: bearer-token
+  header: 'Authorization: Bearer <token>'
+  alternative: HTTP Basic (empty username, API key as password)
+  detail: authentication/goatcounter-authentication.yml
+content_negotiation:
+  request_content_type: application/json
+  response_content_type: application/json
+  required: true
+  note: >-
+    The docs state you must use Content-Type application/json, and all responses return JSON unless
+    noted otherwise. The one exception is GET /api/v0/export/{id}/download, which returns text/csv.
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    GoatCounter documents no idempotency key and the published OpenAPI declares no idempotency
+    parameter on any of the five write operations (POST /count, POST /export, PUT /sites,
+    POST|PATCH /sites/{id}). Retrying POST /api/v0/count will double-count the batch. No Idempotency
+    pointer is emitted for this provider — the contract does not exist.
+pagination:
+  uniform: false
+  styles:
+    - name: id-cursor
+      operations: [GET /api/v0/paths]
+      request_params: [limit, after]
+      response_fields: [more]
+      detail: >-
+        `after` selects only paths with an ID greater than the value given; `more` in the response
+        signals another page is available.
+    - name: offset
+      operations:
+        - GET /api/v0/stats/hits/{path_id}
+        - GET /api/v0/stats/{page}
+        - GET /api/v0/stats/{page}/{id}
+      request_params: [offset, limit]
+      response_fields: [more]
+    - name: exclusion-list
+      operations: [GET /api/v0/stats/hits]
+      request_params: [limit, exclude_paths, include_paths, path_by_name]
+      response_fields: [more]
+      detail: >-
+        The hits overview paginates by passing back the path IDs already seen in `exclude_paths`,
+        rather than by offset or cursor.
+    - name: export-cursor
+      operations: [POST /api/v0/export, 'GET /api/v0/export/{id}']
+      request_params: [start_from_hit_id, start_from_day]
+      response_fields: [last_hit_id]
+      detail: >-
+        The export object returns `last_hit_id`, which is fed back as `start_from_hit_id` on the next
+        export to sync incrementally. Documented in the "Exporting to CSV" example on the help page.
+filtering:
+  time_range:
+    params: [start, end]
+    format: date-time
+    note: The docs advise rounding start and end to the hour.
+  path_selection:
+    params: [include_paths, exclude_paths, path_by_name]
+  grouping:
+    params: [group]
+    values_note: group=day | week | month; `daily` is the deprecated equivalent of group=day.
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  user_defined_metadata: false
+  note: >-
+    Pageview hits carry a fixed field set (path, title, ref, event, size, bot, user_agent, location,
+    language, ip, created_at, query, session). There is no free-form metadata bag.
+request_tracing:
+  request_id_header: null
+  note: No request-id or correlation header is documented or returned.
+versioning:
+  style: uri-path
+  current: /api/v0
+  detail: lifecycle/goatcounter-lifecycle.yml
+errors:
+  envelope: custom (error string | errors object)
+  rfc9457: false
+  statuses: [400, 401, 403]
+  rule: >-
+    A 2xx never carries errors; a 4xx/5xx always carries either `error` or `errors`, never both.
+  detail: errors/goatcounter-problem-types.yml
+rate_limiting:
+  limit: 4 requests/second
+  headers: [X-Rate-Limit-Limit, X-Rate-Limit-Remaining, X-Rate-Limit-Reset]
+  exhaustion_status: undocumented
+  detail: rate-limits/goatcounter-rate-limits.yml
+batching:
+  supported: true
+  operations: [POST /api/v0/count]
+  detail: >-
+    /api/v0/count accepts an array of hits in one request, with a no_sessions flag to skip session
+    tracking. The docs recommend it over the browser /count endpoint for backend integrations
+    because it has higher rate limits and allows extra fields.
+async_operations:
+  present: true
+  pattern: submit-poll-download
+  detail: >-
+    Exports are asynchronous: POST /api/v0/export returns 202 with an export id, GET /api/v0/export/{id}
+    is polled until finished_at is non-null, then GET /api/v0/export/{id}/download returns the file.
+    The download endpoint returns 202 with the error envelope while the export is still running.
+host_model:
+  style: per-site subdomain
+  form: https://{code}.goatcounter.com/api/v0
+  detail: >-
+    Every API call is made against the account's own site subdomain, not a shared api. host. The
+    apex goatcounter.com and www.goatcounter.com do not serve the API — www.goatcounter.com/api/v0/me
+    returns 404 {"error":"not found"} and goatcounter.com/api/v0/me returns 301. Self-hosted instances
+    use their own hostname.
+  evidence:
+    probed: '2026-08-13'
+    checks:
+      - {url: 'https://www.goatcounter.com/api/v0/me', status: 404}
+      - {url: 'https://goatcounter.com/api/v0/me', status: 301}
+      - {url: 'https://stats.arp242.net/api/v0/me', status: 401}
+cross_links:
+  authentication: authentication/goatcounter-authentication.yml
+  errors: errors/goatcounter-problem-types.yml
+  lifecycle: lifecycle/goatcounter-lifecycle.yml
+  rate_limits: rate-limits/goatcounter-rate-limits.yml
+  data_model: data-model/goatcounter-data-model.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

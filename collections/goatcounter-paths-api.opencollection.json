@@ -1,0 +1,47 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GoatCounter Exports Paths API",
+    "version": "0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Paths",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List paths",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://goatcounter.com/api/v0/paths",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get an overview of all tracked paths on the site."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,90 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://www.goatcounter.com/api.json (info.description),
+  https://www.goatcounter.com/help/js,
+  https://www.goatcounter.com/ (Live demo),
+  https://github.com/arp242/goatcounter (self-hosting)
+description: >-
+  GoatCounter has no test-vs-live key separation, no test mode, and no magic test values — every API
+  key writes to real data on a real site. What it does publish is an interactive API console, a public
+  read-only demo dashboard, a documented switch for exercising the tracking script against localhost,
+  and a self-hostable build that makes a throwaway instance the intended way to experiment safely.
+  Recorded honestly: this is a testing surface, not a sandbox environment.
+test_live_separation:
+  supported: false
+  key_prefixes: []
+  note: >-
+    API keys carry no test/live prefix and there is no test mode. The safe pattern is a separate
+    GoatCounter site (or a self-hosted instance) used as a scratch target.
+console:
+  present: true
+  name: RapiDoc API reference with "try" enabled
+  url_pattern: https://{code}.goatcounter.com/api2.html
+  public_reference: https://www.goatcounter.com/api2.html
+  detail: >-
+    Quoted from info.description in the provider-published OpenAPI: "Viewing this documentation at
+    https://[my-code].goatcounter.com/api2.html (rather than using the www.goatcounter.com) enables
+    the 'try' feature." So the interactive console lives on the account's own site host and executes
+    against that site's real data.
+  evidence:
+    probed: '2026-08-13'
+    url: https://stats.arp242.net/api2.html
+    http_status: 200
+  alternate_viewers:
+    - name: SwaggerHub
+      url: https://app.swaggerhub.com/apis-docs/Carpetsmoker/GoatCounter/0.1
+demo:
+  present: true
+  url: https://stats.arp242.net
+  kind: public read-only dashboard
+  detail: >-
+    Linked from the GoatCounter homepage as "Live demo". It is the maintainer's own site running
+    GoatCounter, publicly readable without an account, and its /api/v0/* endpoints answer 401 to
+    anonymous callers — so it is a working reference host for the dashboard, not an open API sandbox.
+  evidence:
+    probed: '2026-08-13'
+    checks:
+      - {url: 'https://stats.arp242.net', status: 200}
+      - {url: 'https://stats.arp242.net/api/v0/me', status: 401}
+local_testing:
+  - name: allow_local
+    surface: count.js
+    setting: 'data-goatcounter-settings=''{"allow_local": true}'''
+    docs: https://www.goatcounter.com/help/js
+    detail: >-
+      count.js refuses to send pageviews from local addresses (localhost, 192.168.0.0, etc.) by
+      default; allow_local turns that filter off so an integration can be exercised on a dev machine.
+  - name: allow_frame
+    surface: count.js
+    docs: https://www.goatcounter.com/help/js
+    detail: Allow requests when the page is loaded in a frame or iframe, for testing embedded setups.
+  - name: no_onload
+    surface: count.js
+    docs: https://www.goatcounter.com/help/js
+    detail: Suppress the automatic pageview so goatcounter.count() can be called deliberately from a test.
+  - name: self-hosted instance
+    surface: server
+    command: goatcounter serve
+    docs: https://github.com/arp242/goatcounter
+    detail: >-
+      `goatcounter serve` starts on :8080 against an SQLite file created on first run, giving a
+      disposable instance with a real API to develop against. This is the provider's own recommended
+      route for anything beyond casual use.
+test_values:
+  cards: []
+  identifiers: []
+  note: >-
+    None published. GoatCounter is an analytics API with no payment, telephony or identity surface, so
+    there is no magic-value catalogue to capture. The one pseudo-fixture is the tracking pixel's `b`
+    parameter, which takes documented bot-class constants (150 Phantom, 151 Nightmare, 152 Selenium,
+    ...) from the zgo.at/isbot library and can be used to mark synthetic traffic — see
+    https://www.goatcounter.com/help/pixel
+data_reset:
+  supported: true
+  detail: >-
+    Site settings expose a data_retention value and per-site data can be cleared from the dashboard;
+    the provider also states users can export everything and cancel at any time.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
