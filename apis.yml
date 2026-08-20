@@ -32,6 +32,17 @@ access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/goatcounter.png
 tags:
   - Analytics
+  - Page Views
+  - Privacy
+  - Statistics
+  - Web Analytics
+  - Open-Source
+  - Self-Hosted
+  - Event
+  - Data Export
+  - Developer Tools
+tags_raw:
+  - Analytics
   - Pageviews
   - Privacy
   - Statistics
@@ -52,6 +63,8 @@ apis:
   humanURL: https://www.goatcounter.com/help/api
   baseURL: https://{code}.goatcounter.com/api/v0
   tags:
+  - Export
+  tags_raw:
   - Exports
   properties:
   - type: OpenAPI
@@ -64,6 +77,8 @@ apis:
   humanURL: https://www.goatcounter.com/help/api
   baseURL: https://{code}.goatcounter.com/api/v0
   tags:
+  - Page Views
+  tags_raw:
   - Pageviews
   properties:
   - type: OpenAPI
@@ -112,6 +127,8 @@ apis:
   humanURL: https://www.goatcounter.com/help/api
   baseURL: https://{code}.goatcounter.com/api/v0
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
