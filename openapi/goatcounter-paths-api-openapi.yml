@@ -1,26 +1,68 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: GoatCounter Exports Paths API
-  description: The GoatCounter API can be used to manage sites, users, count pageviews, export raw data, retrieve statistics, and build custom dashboards on top of GoatCounter web analytics.
-  version: '0'
-  contact:
-    name: GoatCounter
-    url: https://www.goatcounter.com/
+  title: Goatcounter Paths API
+  version: '1.0'
+  description: 'Operations tagged paths across 2 of this provider''s published API definitions: goatcounter-api-swagger20.json, goatcounter-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://goatcounter.com/api/v0
   description: Hosted GoatCounter (replace host with your site's subdomain)
-security:
-- bearerAuth: []
 tags:
-- name: Paths
+- name: paths
 paths:
+  /api/v0/paths:
+    get:
+      operationId: GET_api_v0_paths
+      parameters:
+      - description: Limit number of returned results
+        in: query
+        name: Limit
+        schema:
+          type: integer
+          default: '20'
+          maximum: 200
+          minimum: 1
+      - description: Only select paths after this ID, for pagination.
+        in: query
+        name: After
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiPathsResponse'
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiError'
+        '401':
+          description: 401 Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+      summary: Get an overview of paths on this site (without statistics).
+      tags:
+      - paths
+      security:
+      - basicAuth: []
   /paths:
     get:
       summary: List paths
       description: Get an overview of all tracked paths on the site.
       operationId: listPaths
       tags:
-      - Paths
+      - paths
       parameters:
       - name: limit
         in: query
@@ -33,8 +75,66 @@ paths:
       responses:
         '200':
           description: Paths overview.
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://goatcounter.com/api/v0
+      description: Hosted GoatCounter (replace host with your site's subdomain)
 components:
+  schemas:
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
+    handlers.apiPathsResponse:
+      title: apiPathsResponse
+      type: object
+      properties:
+        more:
+          description: True if there are more paths.
+          type: boolean
+        paths:
+          description: List of paths, sorted by ID.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.Path'
+    goatcounter.Path:
+      title: Path
+      type: object
+      properties:
+        event:
+          description: Is this an event?
+          type: boolean
+        id:
+          description: Path ID
+          type: integer
+        path:
+          description: Path name
+          type: string
+        title:
+          description: Page title
+          type: string
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
   securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
     bearerAuth:
       type: http
       scheme: bearer
+x-refined-from:
+- goatcounter-api-swagger20.json
+- goatcounter-openapi.yml

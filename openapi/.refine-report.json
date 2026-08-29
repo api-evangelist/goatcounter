@@ -1,24 +1,43 @@
 {
   "provider": "goatcounter",
   "sources": [
-    "goatcounter-exports-api-openapi.yml",
-    "goatcounter-pageviews-api-openapi.yml",
-    "goatcounter-paths-api-openapi.yml",
-    "goatcounter-sites-api-openapi.yml",
-    "goatcounter-statistics-api-openapi.yml",
-    "goatcounter-users-api-openapi.yml"
+    "_original/goatcounter-api-swagger20.json",
+    "_original/goatcounter-openapi.yml"
   ],
   "outputs": [
-    "goatcounter-exports-api-openapi.yml",
-    "goatcounter-pageviews-api-openapi.yml",
+    "goatcounter-count-api-openapi.yml",
+    "goatcounter-export-api-openapi.yml",
     "goatcounter-paths-api-openapi.yml",
     "goatcounter-sites-api-openapi.yml",
-    "goatcounter-statistics-api-openapi.yml",
-    "goatcounter-users-api-openapi.yml"
+    "goatcounter-stats-api-openapi.yml",
+    "goatcounter-users-api-openapi.yml",
+    "goatcounter-exports-api-openapi.yml",
+    "goatcounter-pageviews-api-openapi.yml",
+    "goatcounter-statistics-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "goatcounter-api-swagger20.json: upgraded swagger 2.0 -> OpenAPI 3.2.0",
+    "goatcounter-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "goatcounter-openapi.yml: declared missing tag: Exports",
+    "goatcounter-openapi.yml: declared missing tag: Pageviews",
+    "goatcounter-openapi.yml: declared missing tag: Paths",
+    "goatcounter-openapi.yml: declared missing tag: Sites",
+    "goatcounter-openapi.yml: declared missing tag: Statistics",
+    "goatcounter-openapi.yml: declared missing tag: Users",
+    "tag 'paths' spans 2 source specs (goatcounter-api-swagger20.json, goatcounter-openapi.yml): per-path servers applied",
+    "tag 'sites' spans 2 source specs (goatcounter-api-swagger20.json, goatcounter-openapi.yml): per-path servers applied",
+    "tag 'users' spans 2 source specs (goatcounter-api-swagger20.json, goatcounter-openapi.yml): per-path servers applied"
+  ],
+  "skipped": [
+    "goatcounter-exports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "goatcounter-pageviews-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "goatcounter-paths-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "goatcounter-sites-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "goatcounter-statistics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "goatcounter-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

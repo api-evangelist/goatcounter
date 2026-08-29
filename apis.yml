@@ -147,6 +147,36 @@ apis:
     url: openapi/goatcounter-users-api-openapi.yml
   - type: Documentation
     url: https://www.goatcounter.com/help/api
+- aid: goatcounter:goatcounter-count-api
+  name: GoatCounter Count API
+  description: The count API from GoatCounter — 1 operation(s) for count.
+  humanURL: https://www.goatcounter.com/help/api
+  baseURL: https://{code}.goatcounter.com/api/v0
+  tags:
+  - count
+  properties:
+  - type: OpenAPI
+    url: openapi/goatcounter-count-api-openapi.yml
+- aid: goatcounter:goatcounter-export-api
+  name: GoatCounter Export API
+  description: The export API from GoatCounter — 3 operation(s) for export.
+  humanURL: https://www.goatcounter.com/help/api
+  baseURL: https://{code}.goatcounter.com/api/v0
+  tags:
+  - export
+  properties:
+  - type: OpenAPI
+    url: openapi/goatcounter-export-api-openapi.yml
+- aid: goatcounter:goatcounter-stats-api
+  name: GoatCounter Stats API
+  description: The stats API from GoatCounter — 5 operation(s) for stats.
+  humanURL: https://www.goatcounter.com/help/api
+  baseURL: https://{code}.goatcounter.com/api/v0
+  tags:
+  - stats
+  properties:
+  - type: OpenAPI
+    url: openapi/goatcounter-stats-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/goatcounter-agentic-access.yml

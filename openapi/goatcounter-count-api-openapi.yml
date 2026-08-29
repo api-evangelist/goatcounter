@@ -1,0 +1,182 @@
+openapi: 3.2.0
+info:
+  title: GoatCounter Count API
+  description: <p>Reference documentation for the <a href="https://www.goatcounter.com">GoatCounter</a> API.</p> <p>See <a href="/help/api">/help/api</a> for a more general introduction and a few examples.</p> <p>Viewing this documentation at https://[my-code].goatcounter.com/api2.html (rather than using the www.goatcounter.com) enables the "try" feature.</p>
+  version: '0.1'
+  contact:
+    name: Martin Tournoij
+    url: https://www.goatcounter.com/help/api
+    email: support@goatcounter.com
+security:
+- basicAuth: []
+tags:
+- name: count
+paths:
+  /api/v0/count:
+    post:
+      description: 'This can count one or more pageviews. Pageviews are not persisted
+
+        immediately, but persisted in the background every 10 seconds.
+
+
+        The maximum amount of pageviews per request is 500.
+
+
+        Errors will have the key set to the index of the pageview. Any pageviews not
+
+        listed have been processed and shouldn''t be sent again.'
+      operationId: POST_api_v0_count
+      responses:
+        '202':
+          description: 202 Accepted (no data)
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiError'
+        '401':
+          description: 401 Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+      summary: Count pageviews.
+      tags:
+      - count
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handlers.APICountRequest'
+        required: true
+components:
+  schemas:
+    handlers.APICountRequestHit:
+      title: APICountRequestHit
+      type: object
+      required:
+      - path
+      properties:
+        bot:
+          description: 'Hint if this should be considered a bot; should be one of the JSBot*`
+
+            constants from isbot; note the backend may override this if it
+
+            detects a bot using another method.
+
+            https://github.com/zgoat/isbot/blob/master/isbot.go#L28'
+          type: integer
+        created_at:
+          description: 'Time this pageview should be recorded at; this can be in the past,
+
+            but not in the future.'
+          type: string
+          format: date-time
+        event:
+          description: Is this an event?
+          type: boolean
+        ip:
+          description: 'IP to get location from; not used if location is set. Also used for
+
+            session generation.'
+          type: string
+        language:
+          description: Language as a BCP 47 value (e.g. en, en-US, nl, etc.)
+          type: string
+        location:
+          description: Location as ISO-3166-1 alpha2 string (e.g. NL, ID, etc.)
+          type: string
+        path:
+          description: Path of the pageview, or the event name.
+          type: string
+        query:
+          description: Query parameters for this pageview, used to get campaign parameters.
+          type: string
+        ref:
+          description: 'Referrer value, can be an URL (i.e. the Referal: header) or any
+
+            string.'
+          type: string
+        session:
+          description: 'Normally a session is based on hash(User-Agent+IP+salt), but if you don''t
+
+            send the IP address then we can''t determine the session.
+
+
+            In those cases, you can store your own session identifiers and send them
+
+            along. Note these will not be stored in the database as the sessionID
+
+            (just as the hashes aren''t), they''re just used as a unique grouping
+
+            identifier.'
+          type: string
+        size:
+          description: 'Screen width.
+
+
+            For compatibility it also accepts the size as "width,height,scaling", but
+
+            the height and scaling are not used and this format is deprecated.'
+          type: array
+          items:
+            type: number
+        title:
+          description: Page title, or some descriptive event title.
+          type: string
+        user_agent:
+          description: User-Agent header.
+          type: string
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
+    handlers.APICountRequest:
+      title: APICountRequest
+      type: object
+      properties:
+        filter:
+          description: "Filter pageviews; accepted values:\n\n ip Ignore requests coming from IP addresses listed in \"Settings → Ignore IP\". Requires the IP field to be set.\n\n[\"ip\"] is used if this field isn't sent; send an empty array ([]) to not\nfilter anything.\n\nThe X-Goatcounter-Filter header will be set to a list of indexes if any\npageviews are filtered; for example:\n\n X-Goatcounter-Filter: 5, 10\n\nThis header will be omitted if nothing is filtered."
+          type: array
+          items:
+            type: string
+        hits:
+          description: Hits is the list of pageviews.
+          type: array
+          items:
+            $ref: '#/components/schemas/handlers.APICountRequestHit'
+        no_sessions:
+          description: 'By default it''s an error to send pageviews that don''t have either a
+
+            Session or UserAgent and IP set. This avoids accidental errors.
+
+
+            When this is set it will just continue without recording sessions for
+
+            pageviews that don''t have these parameters set.'
+          type: boolean
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

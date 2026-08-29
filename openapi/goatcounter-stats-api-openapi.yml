@@ -1,0 +1,597 @@
+openapi: 3.2.0
+info:
+  title: GoatCounter Stats API
+  description: <p>Reference documentation for the <a href="https://www.goatcounter.com">GoatCounter</a> API.</p> <p>See <a href="/help/api">/help/api</a> for a more general introduction and a few examples.</p> <p>Viewing this documentation at https://[my-code].goatcounter.com/api2.html (rather than using the www.goatcounter.com) enables the "try" feature.</p>
+  version: '0.1'
+  contact:
+    name: Martin Tournoij
+    url: https://www.goatcounter.com/help/api
+    email: support@goatcounter.com
+security:
+- basicAuth: []
+tags:
+- name: stats
+paths:
+  /api/v0/stats/hits:
+    get:
+      operationId: GET_api_v0_stats_hits
+      parameters:
+      - description: Start time, should be rounded to the hour.
+        in: query
+        name: start
+        schema:
+          type: string
+          format: date-time
+          default: one week ago
+      - description: End time, should be rounded to the hour.
+        in: query
+        name: end
+        schema:
+          type: string
+          format: date-time
+          default: current time
+      - description: Maximum number of pages to get.
+        in: query
+        name: limit
+        schema:
+          type: integer
+          default: '20'
+          maximum: 100
+          minimum: 1
+      - description: 'Set Max value in the response to the highest daily, weekly, or
+
+          monthly value, instead of hourly.
+
+
+          The Hourly, Daily, Weekly, and Monthly values are always included in
+
+          the response – this only affects the Max value, which is useful if
+
+          you want to draw charts like the GoatCounter dashboard: you need to
+
+          know the maximum Y-axis value of the chart to draw it.'
+        in: query
+        name: group
+        schema:
+          type: integer
+          enum:
+          - 'enum:'
+          - hour
+          - day
+          - week
+          - month
+      - description: 'Get values for include_paths and exclude_paths by path name, rather
+
+          than path ID. This is more convenient in some cases, but also a bit
+
+          slower.'
+        in: query
+        name: path_by_name
+        schema:
+          type: boolean
+      - description: 'Deprecated: identical to group=day and will be removed in the future.'
+        in: query
+        name: daily
+        schema:
+          type: boolean
+      - description: 'Include only these path IDs; default is to include everything.
+
+
+          If path_by_name is set, it will look up paths by name instead of ID.'
+        in: query
+        name: include_paths
+        schema:
+          type: array
+          items:
+            type: string
+      - description: 'Exclude these path IDs, for pagination.
+
+
+          If path_by_name is set, it will look up paths by name instead of ID.'
+        in: query
+        name: exclude_paths
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiHitsResponse'
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiError'
+        '401':
+          description: 401 Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+      summary: Get an overview of pageviews.
+      tags:
+      - stats
+  /api/v0/stats/hits/{path_id}:
+    get:
+      operationId: GET_api_v0_stats_hits_{path_id}
+      parameters:
+      - description: Start time, should be rounded to the hour.
+        in: query
+        name: start
+        schema:
+          type: string
+          format: date-time
+          default: one week ago
+      - description: End time, should be rounded to the hour.
+        in: query
+        name: end
+        schema:
+          type: string
+          format: date-time
+          default: current time
+      - in: path
+        name: path_id
+        required: true
+        schema:
+          type: integer
+      - description: Offset for pagination.
+        in: query
+        name: offset
+        schema:
+          type: integer
+      - description: Maximum number of pages to get.
+        in: query
+        name: limit
+        schema:
+          type: integer
+          default: '20'
+          maximum: 100
+          minimum: 1
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiRefsResponse'
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiError'
+        '401':
+          description: 401 Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+      summary: Get an overview of referral information for a path.
+      tags:
+      - stats
+  /api/v0/stats/total:
+    get:
+      description: 'This is mostly useful to display things like browser stats as a percentage of
+
+        the total; the /api/v0/pages endpoint only counts the pageviews until it''s
+
+        paginated.'
+      operationId: GET_api_v0_stats_total
+      parameters:
+      - description: Start time, should be rounded to the hour.
+        in: query
+        name: start
+        schema:
+          type: string
+          format: date-time
+          default: one week ago
+      - description: End time, should be rounded to the hour.
+        in: query
+        name: end
+        schema:
+          type: string
+          format: date-time
+          default: current time
+      - description: 'Get values for include_paths and exclude_paths by path name, rather
+
+          than path ID. This is more convenient in some cases, but also a bit
+
+          slower.'
+        in: query
+        name: path_by_name
+        schema:
+          type: boolean
+      - description: 'Include only these path IDs; default is to include everything.
+
+
+          If path_by_name is set, it will look up paths by name instead of ID.'
+        in: query
+        name: include_paths
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiCountTotalResponse'
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiError'
+        '401':
+          description: 401 Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+      summary: Count total number of pageviews for a date range.
+      tags:
+      - stats
+  /api/v0/stats/{page}:
+    get:
+      description: 'Page can be: browsers, systems, locations, languages, sizes, campaigns,
+
+        toprefs.'
+      operationId: GET_api_v0_stats_{page}
+      parameters:
+      - description: Start time, should be rounded to the hour.
+        in: query
+        name: start
+        schema:
+          type: string
+          format: date-time
+          default: one week ago
+      - in: path
+        name: page
+        required: true
+        schema:
+          type: string
+      - description: End time, should be rounded to the hour.
+        in: query
+        name: end
+        schema:
+          type: string
+          format: date-time
+          default: current time
+      - description: Offset for pagination.
+        in: query
+        name: offset
+        schema:
+          type: integer
+      - description: Maximum number of pages to get.
+        in: query
+        name: limit
+        schema:
+          type: integer
+          default: '20'
+          maximum: 100
+          minimum: 1
+      - description: 'Get values for include_paths and exclude_paths by path name, rather
+
+          than path ID. This is more convenient in some cases, but also a bit
+
+          slower.'
+        in: query
+        name: path_by_name
+        schema:
+          type: boolean
+      - description: 'Include only these path IDs; default is to include everything.
+
+
+          If path_by_name is set, it will look up paths by name instead of ID.'
+        in: query
+        name: include_paths
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiStatsResponse'
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiError'
+        '401':
+          description: 401 Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+      summary: Get browser/system/etc. stats.
+      tags:
+      - stats
+  /api/v0/stats/{page}/{id}:
+    get:
+      description: 'Page can be: browsers, systems, locations, sizes, campaigns, toprefs.'
+      operationId: GET_api_v0_stats_{page}_{id}
+      parameters:
+      - description: Start time, should be rounded to the hour.
+        in: query
+        name: start
+        schema:
+          type: string
+          format: date-time
+          default: one week ago
+      - in: path
+        name: page
+        required: true
+        schema:
+          type: string
+      - description: End time, should be rounded to the hour.
+        in: query
+        name: end
+        schema:
+          type: string
+          format: date-time
+          default: current time
+      - description: Offset for pagination.
+        in: query
+        name: offset
+        schema:
+          type: integer
+      - description: Maximum number of pages to get.
+        in: query
+        name: limit
+        schema:
+          type: integer
+          default: '20'
+          maximum: 100
+          minimum: 1
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      - description: 'Get values for include_paths and exclude_paths by path name, rather
+
+          than path ID. This is more convenient in some cases, but also a bit
+
+          slower.'
+        in: query
+        name: path_by_name
+        schema:
+          type: boolean
+      - description: 'Include only these path IDs; default is to include everything.
+
+
+          If path_by_name is set, it will look up paths by name instead of ID.'
+        in: query
+        name: include_paths
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiStatsResponse'
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.apiError'
+        '401':
+          description: 401 Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+        '403':
+          description: 403 Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handlers.authError'
+      summary: Get detailed stats for an ID.
+      tags:
+      - stats
+components:
+  schemas:
+    goatcounter.HitListStat:
+      title: HitListStat
+      type: object
+      properties:
+        daily:
+          description: Total visitors for this day.
+          type: integer
+        day:
+          description: Day these statistics are for.
+          type: string
+          format: date
+        hourly:
+          description: Visitors per hour.
+          type: array
+          items:
+            type: integer
+        monthly:
+          description: 'Visitors for the month; set on first day of the month. This value will
+
+            not be set if it''s 0.'
+          type: integer
+        weekly:
+          description: 'Visitors for the week; set once every 7 days. This value will not be set
+
+            if it''s 0.'
+          type: integer
+    goatcounter.HitList:
+      title: HitList
+      type: object
+      properties:
+        count:
+          description: Number of visitors for the selected date range.
+          type: integer
+        event:
+          description: Is this an event?
+          type: boolean
+        max:
+          description: Highest visitors per hour or day (depending on daily being set).
+          type: integer
+        path:
+          description: Path name (e.g. /hello.html).
+          type: string
+        path_id:
+          description: Path ID
+          type: integer
+        ref_scheme:
+          description: "What kind of referral this is; only set when retrieving referrals .\n\n h HTTP Referal header.\n g Generated; for example are Google domains (google.com, google.nl,\n google.co.nz, etc.) are grouped as the generated referral \"Google\".\n c Campaign (via query parameter)\n o Other"
+          type: string
+          enum:
+          - 'enum:'
+          - h
+          - g
+          - c
+          - o
+        stats:
+          description: Statistics by day and hour.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitListStat'
+        title:
+          description: Page title.
+          type: string
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
+    handlers.apiStatsResponse:
+      title: apiStatsResponse
+      type: object
+      properties:
+        more:
+          type: boolean
+        stats:
+          description: Sorted list of paths with their visitor and pageview count.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitStat'
+    handlers.apiHitsResponse:
+      title: apiHitsResponse
+      type: object
+      properties:
+        hits:
+          description: Sorted list of paths with their visitor and pageview count.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitList'
+        more:
+          description: More hits after this?
+          type: boolean
+        total:
+          description: Total number of visitors in the returned result.
+          type: integer
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
+    handlers.apiRefsResponse:
+      title: apiRefsResponse
+      type: object
+      properties:
+        more:
+          type: boolean
+        refs:
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitStat'
+    handlers.apiCountTotalResponse:
+      title: apiCountTotalResponse
+      type: object
+      properties:
+        stats:
+          description: Total overview per day and hour.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitListStat'
+        total:
+          description: Total number of visitors (including events).
+          type: integer
+        total_events:
+          description: Total number of visitors for events.
+          type: integer
+        total_utc:
+          description: 'Total number of visitors in UTC. The browser, system, etc, stats are
+
+            always in UTC.'
+          type: integer
+    goatcounter.HitStat:
+      title: HitStat
+      type: object
+      properties:
+        count:
+          description: Number of visitors.
+          type: integer
+        id:
+          description: ID for selecting more details; not present in the detail view.
+          type: string
+        name:
+          description: Display name.
+          type: string
+        ref_scheme:
+          description: "What kind of referral this is; only set when retrieving referrals .\n\n h HTTP Referal header.\n g Generated; for example are Google domains (google.com, google.nl,\n google.co.nz, etc.) are grouped as the generated referral \"Google\".\n c Campaign (via query parameter)\n o Other"
+          type: string
+          enum:
+          - 'enum:'
+          - h
+          - g
+          - c
+          - o
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
