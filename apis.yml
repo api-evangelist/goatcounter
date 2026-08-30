@@ -153,6 +153,8 @@ apis:
   humanURL: https://www.goatcounter.com/help/api
   baseURL: https://{code}.goatcounter.com/api/v0
   tags:
+  - Count
+  tags_raw:
   - count
   properties:
   - type: OpenAPI
@@ -163,6 +165,8 @@ apis:
   humanURL: https://www.goatcounter.com/help/api
   baseURL: https://{code}.goatcounter.com/api/v0
   tags:
+  - Export
+  tags_raw:
   - export
   properties:
   - type: OpenAPI
@@ -173,6 +177,8 @@ apis:
   humanURL: https://www.goatcounter.com/help/api
   baseURL: https://{code}.goatcounter.com/api/v0
   tags:
+  - Stats
+  tags_raw:
   - stats
   properties:
   - type: OpenAPI
