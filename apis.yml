@@ -39,7 +39,7 @@ accessModel:
     Corrected 2026-08-13 from "freemium" to "free". GoatCounter publishes no paid tier — the hosted service is
     offered free for reasonable public usage and funded by donations, with self-hosting as the route for
     heavier use. Source https://www.goatcounter.com/#pricing
-position: Consumer
+position: Consuming
 access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/goatcounter.png
 tags:
