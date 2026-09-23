@@ -7,7 +7,7 @@ servers:
 - url: https://goatcounter.com/api/v0
   description: Hosted GoatCounter (replace host with your site's subdomain)
 tags:
-- name: paths
+- name: Paths
 paths:
   /api/v0/paths:
     get:
@@ -51,9 +51,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Get an overview of paths on this site (without statistics).
+      summary: Get an overview of paths on this site (without statistics)
       tags:
-      - paths
+      - Paths
       security:
       - basicAuth: []
   /paths:
@@ -62,7 +62,7 @@ paths:
       description: Get an overview of all tracked paths on the site.
       operationId: listPaths
       tags:
-      - paths
+      - Paths
       parameters:
       - name: limit
         in: query
@@ -82,17 +82,6 @@ paths:
       description: Hosted GoatCounter (replace host with your site's subdomain)
 components:
   schemas:
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
-      type: object
-      properties:
-        error:
-          type: string
-        errors:
-          type: object
     handlers.apiPathsResponse:
       title: apiPathsResponse
       type: object
@@ -105,6 +94,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/goatcounter.Path'
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
     goatcounter.Path:
       title: Path
       type: object
@@ -120,13 +127,6 @@ components:
           type: string
         title:
           description: Page title
-          type: string
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
           type: string
   securitySchemes:
     basicAuth:

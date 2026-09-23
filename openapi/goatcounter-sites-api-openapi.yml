@@ -7,7 +7,7 @@ servers:
 - url: https://goatcounter.com/api/v0
   description: Hosted GoatCounter (replace host with your site's subdomain)
 tags:
-- name: sites
+- name: Sites
 paths:
   /api/v0/sites:
     get:
@@ -37,9 +37,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: List all sites.
+      summary: List all sites
       tags:
-      - sites
+      - Sites
       security:
       - basicAuth: []
     put:
@@ -69,9 +69,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Create a new site.
+      summary: Create a new site
       tags:
-      - sites
+      - Sites
       requestBody:
         content:
           application/json:
@@ -115,9 +115,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Get information about a site.
+      summary: Get information about a site
       tags:
-      - sites
+      - Sites
       security:
       - basicAuth: []
     post:
@@ -158,9 +158,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Update a site.
+      summary: Update a site
       tags:
-      - sites
+      - Sites
       requestBody:
         content:
           application/json:
@@ -207,9 +207,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Update a site.
+      summary: Update a site
       tags:
-      - sites
+      - Sites
       requestBody:
         content:
           application/json:
@@ -223,7 +223,7 @@ paths:
       summary: List sites
       operationId: listSites
       tags:
-      - sites
+      - Sites
       responses:
         '200':
           description: A list of sites.
@@ -233,7 +233,7 @@ paths:
       summary: Create a new site
       operationId: createSite
       tags:
-      - sites
+      - Sites
       requestBody:
         content:
           application/json:
@@ -252,7 +252,7 @@ paths:
       summary: Get site detail
       operationId: getSite
       tags:
-      - sites
+      - Sites
       parameters:
       - name: id
         in: path
@@ -268,7 +268,7 @@ paths:
       summary: Update a site
       operationId: updateSitePost
       tags:
-      - sites
+      - Sites
       parameters:
       - name: id
         in: path
@@ -289,7 +289,7 @@ paths:
       summary: Patch a site
       operationId: patchSite
       tags:
-      - sites
+      - Sites
       parameters:
       - name: id
         in: path
@@ -311,32 +311,13 @@ paths:
       description: Hosted GoatCounter (replace host with your site's subdomain)
 components:
   schemas:
-    goatcounter.View:
-      title: View
-      description: 'Views for the dashboard; these settings apply to all widget and are
-
-        configurable in the yellow box at the top.'
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
       type: object
       properties:
-        filter:
+        Error:
           type: string
-        group:
-          type: integer
-        name:
-          type: string
-        period:
-          description: '"week", "month", etc., or n days: "8"'
-          type: string
-    handlers.apiSiteUpdateRequest:
-      title: apiSiteUpdateRequest
-      type: object
-      properties:
-        cname:
-          type: string
-        link_domain:
-          type: string
-        settings:
-          $ref: '#/components/schemas/goatcounter.SiteSettings'
     goatcounter.UserSettings:
       title: UserSettings
       description: UserSettings are all user preferences.
@@ -373,84 +354,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/goatcounter.Widget'
-    tz.Zone:
-      title: Zone
-      description: Zone represents a time zone.
+    handlers.apiSitesResponse:
+      title: apiSitesResponse
       type: object
       properties:
-        Abbr:
-          description: WITA – the correct abbreviation may change depending on the time of year (i.e. CET and CEST, depending on DST).
+        sites:
           type: array
           items:
-            type: string
-        Comments:
-          description: Borneo (east, south); Sulawesi/Celebes, Bali, Nusa Tengarra; Timor (west)
-          type: string
-        CountryCode:
-          description: ID
-          type: string
-        CountryName:
-          description: Indonesia
-          type: string
-        Zone:
-          description: Asia/Makassar
-          type: string
-    goatcounter.Widget:
-      title: Widget
-      description: Widgets is a list of widgets to be printed, in order.
-      type: object
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
-      type: object
-      properties:
-        error:
-          type: string
-        errors:
-          type: object
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
-    goatcounter.SiteSettings:
-      title: SiteSettings
-      description: 'SiteSettings contains all the user-configurable settings for a site, with
-
-        the exception of the domain settings.
-
-
-        This is stored as JSON in the database.'
-      type: object
-      properties:
-        allow_bosmang:
-          type: boolean
-        allow_counter:
-          type: boolean
-        allow_embed:
-          type: array
-          items:
-            type: string
-        collect:
-          type: integer
-        collect_regions:
-          type: array
-          items:
-            type: string
-        data_retention:
-          type: integer
-        ignore_ips:
-          type: array
-          items:
-            type: string
-        public:
-          type: string
-        secret:
-          type: string
+            $ref: '#/components/schemas/goatcounter.Site'
     goatcounter.Site:
       title: Site
       type: object
@@ -502,14 +413,103 @@ components:
           format: date-time
         user_defaults:
           $ref: '#/components/schemas/goatcounter.UserSettings'
-    handlers.apiSitesResponse:
-      title: apiSitesResponse
+    handlers.apiSiteUpdateRequest:
+      title: apiSiteUpdateRequest
       type: object
       properties:
-        sites:
+        cname:
+          type: string
+        link_domain:
+          type: string
+        settings:
+          $ref: '#/components/schemas/goatcounter.SiteSettings'
+    goatcounter.SiteSettings:
+      title: SiteSettings
+      description: 'SiteSettings contains all the user-configurable settings for a site, with
+
+        the exception of the domain settings.
+
+
+        This is stored as JSON in the database.'
+      type: object
+      properties:
+        allow_bosmang:
+          type: boolean
+        allow_counter:
+          type: boolean
+        allow_embed:
           type: array
           items:
-            $ref: '#/components/schemas/goatcounter.Site'
+            type: string
+        collect:
+          type: integer
+        collect_regions:
+          type: array
+          items:
+            type: string
+        data_retention:
+          type: integer
+        ignore_ips:
+          type: array
+          items:
+            type: string
+        public:
+          type: string
+        secret:
+          type: string
+    goatcounter.Widget:
+      title: Widget
+      description: Widgets is a list of widgets to be printed, in order.
+      type: object
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
+    tz.Zone:
+      title: Zone
+      description: Zone represents a time zone.
+      type: object
+      properties:
+        Abbr:
+          description: WITA – the correct abbreviation may change depending on the time of year (i.e. CET and CEST, depending on DST).
+          type: array
+          items:
+            type: string
+        Comments:
+          description: Borneo (east, south); Sulawesi/Celebes, Bali, Nusa Tengarra; Timor (west)
+          type: string
+        CountryCode:
+          description: ID
+          type: string
+        CountryName:
+          description: Indonesia
+          type: string
+        Zone:
+          description: Asia/Makassar
+          type: string
+    goatcounter.View:
+      title: View
+      description: 'Views for the dashboard; these settings apply to all widget and are
+
+        configurable in the yellow box at the top.'
+      type: object
+      properties:
+        filter:
+          type: string
+        group:
+          type: integer
+        name:
+          type: string
+        period:
+          description: '"week", "month", etc., or n days: "8"'
+          type: string
     Site:
       type: object
       properties:

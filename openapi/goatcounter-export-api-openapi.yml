@@ -1,7 +1,13 @@
 openapi: 3.2.0
 info:
   title: GoatCounter Export API
-  description: <p>Reference documentation for the <a href="https://www.goatcounter.com">GoatCounter</a> API.</p> <p>See <a href="/help/api">/help/api</a> for a more general introduction and a few examples.</p> <p>Viewing this documentation at https://[my-code].goatcounter.com/api2.html (rather than using the www.goatcounter.com) enables the "try" feature.</p>
+  description: 'Reference documentation for the GoatCounter API.
+
+
+    See /help/api for a more general introduction and a few examples.
+
+
+    Viewing this documentation at https://[my-code].goatcounter.com/api2.html (rather than using the www.goatcounter.com) enables the "try" feature.'
   version: '0.1'
   contact:
     name: Martin Tournoij
@@ -10,7 +16,7 @@ info:
 security:
 - basicAuth: []
 tags:
-- name: export
+- name: Export
 paths:
   /api/v0/export:
     post:
@@ -43,9 +49,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Start a new export in the background.
+      summary: Start a new export in the background
       tags:
-      - export
+      - Export
       requestBody:
         content:
           application/json:
@@ -86,9 +92,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Get details about an export.
+      summary: Get details about an export
       tags:
-      - export
+      - Export
   /api/v0/export/{id}/download:
     get:
       description: 'The export may take a while to generate, depending on the size. It will
@@ -145,9 +151,9 @@ paths:
             text/csv:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Download an export file.
+      summary: Download an export file
       tags:
-      - export
+      - Export
 components:
   schemas:
     handlers.apiError:
@@ -161,6 +167,31 @@ components:
           type: string
         errors:
           type: object
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
+    handlers.apiExportRequest:
+      title: apiExportRequest
+      type: object
+      properties:
+        format:
+          description: Export format, defaults to csv.
+          type: string
+          enum:
+          - 'enum:'
+          - csv
+          - json
+        start_from_day:
+          description: The day to start this export from, for JSON exports.
+          type: string
+          format: date-time
+        start_from_hit_id:
+          description: Pagination cursor for CSV; only export hits with an ID greater than this.
+          type: integer
     v2.Export:
       title: Export
       type: object
@@ -209,31 +240,6 @@ components:
         start_from_hit_id:
           description: The hit ID this export was started from, for CSV exports.
           type: integer
-    handlers.apiExportRequest:
-      title: apiExportRequest
-      type: object
-      properties:
-        format:
-          description: Export format, defaults to csv.
-          type: string
-          enum:
-          - 'enum:'
-          - csv
-          - json
-        start_from_day:
-          description: The day to start this export from, for JSON exports.
-          type: string
-          format: date-time
-        start_from_hit_id:
-          description: Pagination cursor for CSV; only export hits with an ID greater than this.
-          type: integer
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
   securitySchemes:
     basicAuth:
       type: http

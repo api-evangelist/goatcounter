@@ -7,7 +7,7 @@ servers:
 - url: https://goatcounter.com/api/v0
   description: Hosted GoatCounter (replace host with your site's subdomain)
 tags:
-- name: users
+- name: Users
 paths:
   /api/v0/me:
     get:
@@ -37,9 +37,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Get information about the current user and API key.
+      summary: Get information about the current user and API key
       tags:
-      - users
+      - Users
       security:
       - basicAuth: []
   /me:
@@ -47,7 +47,7 @@ paths:
       summary: Get current user
       operationId: getMe
       tags:
-      - users
+      - Users
       responses:
         '200':
           description: Current user info.
@@ -58,44 +58,13 @@ paths:
       description: Hosted GoatCounter (replace host with your site's subdomain)
 components:
   schemas:
-    goatcounter.APIToken:
-      title: APIToken
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
       type: object
       properties:
-        name:
+        Error:
           type: string
-        permissions:
-          type: integer
-        sites:
-          type: integer
-          items: {}
-    goatcounter.View:
-      title: View
-      description: 'Views for the dashboard; these settings apply to all widget and are
-
-        configurable in the yellow box at the top.'
-      type: object
-      properties:
-        filter:
-          type: string
-        group:
-          type: integer
-        name:
-          type: string
-        period:
-          description: '"week", "month", etc., or n days: "8"'
-          type: string
-    handlers.meResponse:
-      title: meResponse
-      type: object
-      properties:
-        token:
-          $ref: '#/components/schemas/goatcounter.APIToken'
-        user:
-          $ref: '#/components/schemas/goatcounter.User'
-    goatcounter.UserAccess:
-      title: UserAccess
-      type: object
     goatcounter.UserSettings:
       title: UserSettings
       description: UserSettings are all user preferences.
@@ -132,27 +101,35 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/goatcounter.Widget'
-    tz.Zone:
-      title: Zone
-      description: Zone represents a time zone.
+    goatcounter.UserAccess:
+      title: UserAccess
+      type: object
+    goatcounter.APIToken:
+      title: APIToken
       type: object
       properties:
-        Abbr:
-          description: WITA – the correct abbreviation may change depending on the time of year (i.e. CET and CEST, depending on DST).
-          type: array
-          items:
-            type: string
-        Comments:
-          description: Borneo (east, south); Sulawesi/Celebes, Bali, Nusa Tengarra; Timor (west)
+        name:
           type: string
-        CountryCode:
-          description: ID
+        permissions:
+          type: integer
+        sites:
+          type: integer
+          items: {}
+    goatcounter.View:
+      title: View
+      description: 'Views for the dashboard; these settings apply to all widget and are
+
+        configurable in the yellow box at the top.'
+      type: object
+      properties:
+        filter:
           type: string
-        CountryName:
-          description: Indonesia
+        group:
+          type: integer
+        name:
           type: string
-        Zone:
-          description: Asia/Makassar
+        period:
+          description: '"week", "month", etc., or n days: "8"'
           type: string
     goatcounter.Widget:
       title: Widget
@@ -218,13 +195,36 @@ components:
           type: string
           format: date-time
           readOnly: true
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
+    tz.Zone:
+      title: Zone
+      description: Zone represents a time zone.
       type: object
       properties:
-        Error:
+        Abbr:
+          description: WITA – the correct abbreviation may change depending on the time of year (i.e. CET and CEST, depending on DST).
+          type: array
+          items:
+            type: string
+        Comments:
+          description: Borneo (east, south); Sulawesi/Celebes, Bali, Nusa Tengarra; Timor (west)
           type: string
+        CountryCode:
+          description: ID
+          type: string
+        CountryName:
+          description: Indonesia
+          type: string
+        Zone:
+          description: Asia/Makassar
+          type: string
+    handlers.meResponse:
+      title: meResponse
+      type: object
+      properties:
+        token:
+          $ref: '#/components/schemas/goatcounter.APIToken'
+        user:
+          $ref: '#/components/schemas/goatcounter.User'
   securitySchemes:
     basicAuth:
       type: http

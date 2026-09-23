@@ -30,14 +30,18 @@
     "goatcounter-openapi.yml: declared missing tag: Users",
     "tag 'paths' spans 2 source specs (goatcounter-api-swagger20.json, goatcounter-openapi.yml): per-path servers applied",
     "tag 'sites' spans 2 source specs (goatcounter-api-swagger20.json, goatcounter-openapi.yml): per-path servers applied",
-    "tag 'users' spans 2 source specs (goatcounter-api-swagger20.json, goatcounter-openapi.yml): per-path servers applied"
+    "tag 'users' spans 2 source specs (goatcounter-api-swagger20.json, goatcounter-openapi.yml): per-path servers applied",
+    "apis.yml register: already-registered"
   ],
   "skipped": [
+    "goatcounter-count-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "goatcounter-export-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "goatcounter-exports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "goatcounter-pageviews-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "goatcounter-paths-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "goatcounter-sites-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "goatcounter-statistics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "goatcounter-stats-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "goatcounter-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

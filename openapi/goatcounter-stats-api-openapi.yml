@@ -1,7 +1,13 @@
 openapi: 3.2.0
 info:
   title: GoatCounter Stats API
-  description: <p>Reference documentation for the <a href="https://www.goatcounter.com">GoatCounter</a> API.</p> <p>See <a href="/help/api">/help/api</a> for a more general introduction and a few examples.</p> <p>Viewing this documentation at https://[my-code].goatcounter.com/api2.html (rather than using the www.goatcounter.com) enables the "try" feature.</p>
+  description: 'Reference documentation for the GoatCounter API.
+
+
+    See /help/api for a more general introduction and a few examples.
+
+
+    Viewing this documentation at https://[my-code].goatcounter.com/api2.html (rather than using the www.goatcounter.com) enables the "try" feature.'
   version: '0.1'
   contact:
     name: Martin Tournoij
@@ -10,7 +16,7 @@ info:
 security:
 - basicAuth: []
 tags:
-- name: stats
+- name: Stats
 paths:
   /api/v0/stats/hits:
     get:
@@ -119,9 +125,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Get an overview of pageviews.
+      summary: Get an overview of pageviews
       tags:
-      - stats
+      - Stats
   /api/v0/stats/hits/{path_id}:
     get:
       operationId: GET_api_v0_stats_hits_{path_id}
@@ -183,9 +189,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Get an overview of referral information for a path.
+      summary: Get an overview of referral information for a path
       tags:
-      - stats
+      - Stats
   /api/v0/stats/total:
     get:
       description: 'This is mostly useful to display things like browser stats as a percentage of
@@ -253,9 +259,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Count total number of pageviews for a date range.
+      summary: Count total number of pageviews for a date range
       tags:
-      - stats
+      - Stats
   /api/v0/stats/{page}:
     get:
       description: 'Page can be: browsers, systems, locations, languages, sizes, campaigns,
@@ -339,9 +345,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Get browser/system/etc. stats.
+      summary: Get browser/system/etc. stats
       tags:
-      - stats
+      - Stats
   /api/v0/stats/{page}/{id}:
     get:
       description: 'Page can be: browsers, systems, locations, sizes, campaigns, toprefs.'
@@ -428,37 +434,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/handlers.authError'
-      summary: Get detailed stats for an ID.
+      summary: Get detailed stats for an ID
       tags:
-      - stats
+      - Stats
 components:
   schemas:
-    goatcounter.HitListStat:
-      title: HitListStat
+    handlers.apiRefsResponse:
+      title: apiRefsResponse
       type: object
       properties:
-        daily:
-          description: Total visitors for this day.
-          type: integer
-        day:
-          description: Day these statistics are for.
-          type: string
-          format: date
-        hourly:
-          description: Visitors per hour.
+        more:
+          type: boolean
+        refs:
           type: array
           items:
-            type: integer
-        monthly:
-          description: 'Visitors for the month; set on first day of the month. This value will
-
-            not be set if it''s 0.'
-          type: integer
-        weekly:
-          description: 'Visitors for the week; set once every 7 days. This value will not be set
-
-            if it''s 0.'
-          type: integer
+            $ref: '#/components/schemas/goatcounter.HitStat'
     goatcounter.HitList:
       title: HitList
       type: object
@@ -495,17 +485,13 @@ components:
         title:
           description: Page title.
           type: string
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
       type: object
       properties:
-        error:
+        Error:
           type: string
-        errors:
-          type: object
     handlers.apiStatsResponse:
       title: apiStatsResponse
       type: object
@@ -517,58 +503,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/goatcounter.HitStat'
-    handlers.apiHitsResponse:
-      title: apiHitsResponse
-      type: object
-      properties:
-        hits:
-          description: Sorted list of paths with their visitor and pageview count.
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.HitList'
-        more:
-          description: More hits after this?
-          type: boolean
-        total:
-          description: Total number of visitors in the returned result.
-          type: integer
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
-    handlers.apiRefsResponse:
-      title: apiRefsResponse
-      type: object
-      properties:
-        more:
-          type: boolean
-        refs:
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.HitStat'
-    handlers.apiCountTotalResponse:
-      title: apiCountTotalResponse
-      type: object
-      properties:
-        stats:
-          description: Total overview per day and hour.
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.HitListStat'
-        total:
-          description: Total number of visitors (including events).
-          type: integer
-        total_events:
-          description: Total number of visitors for events.
-          type: integer
-        total_utc:
-          description: 'Total number of visitors in UTC. The browser, system, etc, stats are
-
-            always in UTC.'
-          type: integer
     goatcounter.HitStat:
       title: HitStat
       type: object
@@ -591,6 +525,78 @@ components:
           - g
           - c
           - o
+    handlers.apiCountTotalResponse:
+      title: apiCountTotalResponse
+      type: object
+      properties:
+        stats:
+          description: Total overview per day and hour.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitListStat'
+        total:
+          description: Total number of visitors (including events).
+          type: integer
+        total_events:
+          description: Total number of visitors for events.
+          type: integer
+        total_utc:
+          description: 'Total number of visitors in UTC. The browser, system, etc, stats are
+
+            always in UTC.'
+          type: integer
+    handlers.apiHitsResponse:
+      title: apiHitsResponse
+      type: object
+      properties:
+        hits:
+          description: Sorted list of paths with their visitor and pageview count.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitList'
+        more:
+          description: More hits after this?
+          type: boolean
+        total:
+          description: Total number of visitors in the returned result.
+          type: integer
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
+    goatcounter.HitListStat:
+      title: HitListStat
+      type: object
+      properties:
+        daily:
+          description: Total visitors for this day.
+          type: integer
+        day:
+          description: Day these statistics are for.
+          type: string
+          format: date
+        hourly:
+          description: Visitors per hour.
+          type: array
+          items:
+            type: integer
+        monthly:
+          description: 'Visitors for the month; set on first day of the month. This value will
+
+            not be set if it''s 0.'
+          type: integer
+        weekly:
+          description: 'Visitors for the week; set once every 7 days. This value will not be set
+
+            if it''s 0.'
+          type: integer
   securitySchemes:
     basicAuth:
       type: http
