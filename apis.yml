@@ -48,7 +48,7 @@ tags:
   - Privacy
   - Statistics
   - Web Analytics
-  - Open-Source
+  - Open Source
   - Self-Hosted
   - Event
   - Data Export
@@ -64,6 +64,7 @@ tags_raw:
   - Events
   - Data Export
   - Developer Tools
+  - Open-Source
 created: '2025-02-08'
 modified: '2026-08-13'
 url: https://raw.githubusercontent.com/api-evangelist/goatcounter/refs/heads/main/apis.yml

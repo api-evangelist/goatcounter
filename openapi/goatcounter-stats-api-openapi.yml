@@ -439,70 +439,6 @@ paths:
       - Stats
 components:
   schemas:
-    handlers.apiRefsResponse:
-      title: apiRefsResponse
-      type: object
-      properties:
-        more:
-          type: boolean
-        refs:
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.HitStat'
-    goatcounter.HitList:
-      title: HitList
-      type: object
-      properties:
-        count:
-          description: Number of visitors for the selected date range.
-          type: integer
-        event:
-          description: Is this an event?
-          type: boolean
-        max:
-          description: Highest visitors per hour or day (depending on daily being set).
-          type: integer
-        path:
-          description: Path name (e.g. /hello.html).
-          type: string
-        path_id:
-          description: Path ID
-          type: integer
-        ref_scheme:
-          description: "What kind of referral this is; only set when retrieving referrals .\n\n h HTTP Referal header.\n g Generated; for example are Google domains (google.com, google.nl,\n google.co.nz, etc.) are grouped as the generated referral \"Google\".\n c Campaign (via query parameter)\n o Other"
-          type: string
-          enum:
-          - 'enum:'
-          - h
-          - g
-          - c
-          - o
-        stats:
-          description: Statistics by day and hour.
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.HitListStat'
-        title:
-          description: Page title.
-          type: string
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
-    handlers.apiStatsResponse:
-      title: apiStatsResponse
-      type: object
-      properties:
-        more:
-          type: boolean
-        stats:
-          description: Sorted list of paths with their visitor and pageview count.
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.HitStat'
     goatcounter.HitStat:
       title: HitStat
       type: object
@@ -525,6 +461,16 @@ components:
           - g
           - c
           - o
+    handlers.apiRefsResponse:
+      title: apiRefsResponse
+      type: object
+      properties:
+        more:
+          type: boolean
+        refs:
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitStat'
     handlers.apiCountTotalResponse:
       title: apiCountTotalResponse
       type: object
@@ -544,21 +490,6 @@ components:
           description: 'Total number of visitors in UTC. The browser, system, etc, stats are
 
             always in UTC.'
-          type: integer
-    handlers.apiHitsResponse:
-      title: apiHitsResponse
-      type: object
-      properties:
-        hits:
-          description: Sorted list of paths with their visitor and pageview count.
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.HitList'
-        more:
-          description: More hits after this?
-          type: boolean
-        total:
-          description: Total number of visitors in the returned result.
           type: integer
     handlers.apiError:
       title: apiError
@@ -597,6 +528,75 @@ components:
 
             if it''s 0.'
           type: integer
+    goatcounter.HitList:
+      title: HitList
+      type: object
+      properties:
+        count:
+          description: Number of visitors for the selected date range.
+          type: integer
+        event:
+          description: Is this an event?
+          type: boolean
+        max:
+          description: Highest visitors per hour or day (depending on daily being set).
+          type: integer
+        path:
+          description: Path name (e.g. /hello.html).
+          type: string
+        path_id:
+          description: Path ID
+          type: integer
+        ref_scheme:
+          description: "What kind of referral this is; only set when retrieving referrals .\n\n h HTTP Referal header.\n g Generated; for example are Google domains (google.com, google.nl,\n google.co.nz, etc.) are grouped as the generated referral \"Google\".\n c Campaign (via query parameter)\n o Other"
+          type: string
+          enum:
+          - 'enum:'
+          - h
+          - g
+          - c
+          - o
+        stats:
+          description: Statistics by day and hour.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitListStat'
+        title:
+          description: Page title.
+          type: string
+    handlers.apiHitsResponse:
+      title: apiHitsResponse
+      type: object
+      properties:
+        hits:
+          description: Sorted list of paths with their visitor and pageview count.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitList'
+        more:
+          description: More hits after this?
+          type: boolean
+        total:
+          description: Total number of visitors in the returned result.
+          type: integer
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
+    handlers.apiStatsResponse:
+      title: apiStatsResponse
+      type: object
+      properties:
+        more:
+          type: boolean
+        stats:
+          description: Sorted list of paths with their visitor and pageview count.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitStat'
   securitySchemes:
     basicAuth:
       type: http

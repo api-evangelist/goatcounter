@@ -64,6 +64,17 @@ paths:
         required: true
 components:
   schemas:
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
     handlers.APICountRequestHit:
       title: APICountRequestHit
       type: object
@@ -140,17 +151,6 @@ components:
         user_agent:
           description: User-Agent header.
           type: string
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
-      type: object
-      properties:
-        error:
-          type: string
-        errors:
-          type: object
     handlers.APICountRequest:
       title: APICountRequest
       type: object

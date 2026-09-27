@@ -167,13 +167,6 @@ components:
           type: string
         errors:
           type: object
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
     handlers.apiExportRequest:
       title: apiExportRequest
       type: object
@@ -240,6 +233,13 @@ components:
         start_from_hit_id:
           description: The hit ID this export was started from, for CSV exports.
           type: integer
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
   securitySchemes:
     basicAuth:
       type: http

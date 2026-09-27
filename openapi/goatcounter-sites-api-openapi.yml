@@ -311,57 +311,20 @@ paths:
       description: Hosted GoatCounter (replace host with your site's subdomain)
 components:
   schemas:
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
+    goatcounter.Widget:
+      title: Widget
+      description: Widgets is a list of widgets to be printed, in order.
+      type: object
+    handlers.apiSiteUpdateRequest:
+      title: apiSiteUpdateRequest
       type: object
       properties:
-        Error:
+        cname:
           type: string
-    goatcounter.UserSettings:
-      title: UserSettings
-      description: UserSettings are all user preferences.
-      type: object
-      properties:
-        date_format:
+        link_domain:
           type: string
-        datepicker:
-          type: boolean
-        email_reports:
-          type: integer
-        fewer_numbers:
-          type: boolean
-        fewer_numbers_lock_until:
-          type: string
-          format: date-time
-        language:
-          type: string
-        number_format:
-          type: string
-        sunday_starts_week:
-          type: boolean
-        theme:
-          type: string
-        timezone:
-          $ref: '#/components/schemas/tz.Zone'
-        twenty_four_hours:
-          type: boolean
-        views:
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.View'
-        widgets:
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.Widget'
-    handlers.apiSitesResponse:
-      title: apiSitesResponse
-      type: object
-      properties:
-        sites:
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.Site'
+        settings:
+          $ref: '#/components/schemas/goatcounter.SiteSettings'
     goatcounter.Site:
       title: Site
       type: object
@@ -413,16 +376,77 @@ components:
           format: date-time
         user_defaults:
           $ref: '#/components/schemas/goatcounter.UserSettings'
-    handlers.apiSiteUpdateRequest:
-      title: apiSiteUpdateRequest
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
       type: object
       properties:
-        cname:
+        error:
           type: string
-        link_domain:
+        errors:
+          type: object
+    handlers.apiSitesResponse:
+      title: apiSitesResponse
+      type: object
+      properties:
+        sites:
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.Site'
+    goatcounter.View:
+      title: View
+      description: 'Views for the dashboard; these settings apply to all widget and are
+
+        configurable in the yellow box at the top.'
+      type: object
+      properties:
+        filter:
           type: string
-        settings:
-          $ref: '#/components/schemas/goatcounter.SiteSettings'
+        group:
+          type: integer
+        name:
+          type: string
+        period:
+          description: '"week", "month", etc., or n days: "8"'
+          type: string
+    goatcounter.UserSettings:
+      title: UserSettings
+      description: UserSettings are all user preferences.
+      type: object
+      properties:
+        date_format:
+          type: string
+        datepicker:
+          type: boolean
+        email_reports:
+          type: integer
+        fewer_numbers:
+          type: boolean
+        fewer_numbers_lock_until:
+          type: string
+          format: date-time
+        language:
+          type: string
+        number_format:
+          type: string
+        sunday_starts_week:
+          type: boolean
+        theme:
+          type: string
+        timezone:
+          $ref: '#/components/schemas/tz.Zone'
+        twenty_four_hours:
+          type: boolean
+        views:
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.View'
+        widgets:
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.Widget'
     goatcounter.SiteSettings:
       title: SiteSettings
       description: 'SiteSettings contains all the user-configurable settings for a site, with
@@ -457,21 +481,13 @@ components:
           type: string
         secret:
           type: string
-    goatcounter.Widget:
-      title: Widget
-      description: Widgets is a list of widgets to be printed, in order.
-      type: object
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
       type: object
       properties:
-        error:
+        Error:
           type: string
-        errors:
-          type: object
     tz.Zone:
       title: Zone
       description: Zone represents a time zone.
@@ -493,22 +509,6 @@ components:
           type: string
         Zone:
           description: Asia/Makassar
-          type: string
-    goatcounter.View:
-      title: View
-      description: 'Views for the dashboard; these settings apply to all widget and are
-
-        configurable in the yellow box at the top.'
-      type: object
-      properties:
-        filter:
-          type: string
-        group:
-          type: integer
-        name:
-          type: string
-        period:
-          description: '"week", "month", etc., or n days: "8"'
           type: string
     Site:
       type: object
