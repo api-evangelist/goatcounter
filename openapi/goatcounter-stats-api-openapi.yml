@@ -439,38 +439,21 @@ paths:
       - Stats
 components:
   schemas:
-    goatcounter.HitStat:
-      title: HitStat
+    handlers.apiHitsResponse:
+      title: apiHitsResponse
       type: object
       properties:
-        count:
-          description: Number of visitors.
-          type: integer
-        id:
-          description: ID for selecting more details; not present in the detail view.
-          type: string
-        name:
-          description: Display name.
-          type: string
-        ref_scheme:
-          description: "What kind of referral this is; only set when retrieving referrals .\n\n h HTTP Referal header.\n g Generated; for example are Google domains (google.com, google.nl,\n google.co.nz, etc.) are grouped as the generated referral \"Google\".\n c Campaign (via query parameter)\n o Other"
-          type: string
-          enum:
-          - 'enum:'
-          - h
-          - g
-          - c
-          - o
-    handlers.apiRefsResponse:
-      title: apiRefsResponse
-      type: object
-      properties:
-        more:
-          type: boolean
-        refs:
+        hits:
+          description: Sorted list of paths with their visitor and pageview count.
           type: array
           items:
-            $ref: '#/components/schemas/goatcounter.HitStat'
+            $ref: '#/components/schemas/goatcounter.HitList'
+        more:
+          description: More hits after this?
+          type: boolean
+        total:
+          description: Total number of visitors in the returned result.
+          type: integer
     handlers.apiCountTotalResponse:
       title: apiCountTotalResponse
       type: object
@@ -490,43 +473,6 @@ components:
           description: 'Total number of visitors in UTC. The browser, system, etc, stats are
 
             always in UTC.'
-          type: integer
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
-      type: object
-      properties:
-        error:
-          type: string
-        errors:
-          type: object
-    goatcounter.HitListStat:
-      title: HitListStat
-      type: object
-      properties:
-        daily:
-          description: Total visitors for this day.
-          type: integer
-        day:
-          description: Day these statistics are for.
-          type: string
-          format: date
-        hourly:
-          description: Visitors per hour.
-          type: array
-          items:
-            type: integer
-        monthly:
-          description: 'Visitors for the month; set on first day of the month. This value will
-
-            not be set if it''s 0.'
-          type: integer
-        weekly:
-          description: 'Visitors for the week; set once every 7 days. This value will not be set
-
-            if it''s 0.'
           type: integer
     goatcounter.HitList:
       title: HitList
@@ -564,28 +510,16 @@ components:
         title:
           description: Page title.
           type: string
-    handlers.apiHitsResponse:
-      title: apiHitsResponse
+    handlers.apiRefsResponse:
+      title: apiRefsResponse
       type: object
       properties:
-        hits:
-          description: Sorted list of paths with their visitor and pageview count.
+        more:
+          type: boolean
+        refs:
           type: array
           items:
-            $ref: '#/components/schemas/goatcounter.HitList'
-        more:
-          description: More hits after this?
-          type: boolean
-        total:
-          description: Total number of visitors in the returned result.
-          type: integer
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
+            $ref: '#/components/schemas/goatcounter.HitStat'
     handlers.apiStatsResponse:
       title: apiStatsResponse
       type: object
@@ -597,6 +531,72 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/goatcounter.HitStat'
+    goatcounter.HitStat:
+      title: HitStat
+      type: object
+      properties:
+        count:
+          description: Number of visitors.
+          type: integer
+        id:
+          description: ID for selecting more details; not present in the detail view.
+          type: string
+        name:
+          description: Display name.
+          type: string
+        ref_scheme:
+          description: "What kind of referral this is; only set when retrieving referrals .\n\n h HTTP Referal header.\n g Generated; for example are Google domains (google.com, google.nl,\n google.co.nz, etc.) are grouped as the generated referral \"Google\".\n c Campaign (via query parameter)\n o Other"
+          type: string
+          enum:
+          - 'enum:'
+          - h
+          - g
+          - c
+          - o
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
+    goatcounter.HitListStat:
+      title: HitListStat
+      type: object
+      properties:
+        daily:
+          description: Total visitors for this day.
+          type: integer
+        day:
+          description: Day these statistics are for.
+          type: string
+          format: date
+        hourly:
+          description: Visitors per hour.
+          type: array
+          items:
+            type: integer
+        monthly:
+          description: 'Visitors for the month; set on first day of the month. This value will
+
+            not be set if it''s 0.'
+          type: integer
+        weekly:
+          description: 'Visitors for the week; set once every 7 days. This value will not be set
+
+            if it''s 0.'
+          type: integer
   securitySchemes:
     basicAuth:
       type: http

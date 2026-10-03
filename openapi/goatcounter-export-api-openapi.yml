@@ -156,6 +156,13 @@ paths:
       - Export
 components:
   schemas:
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
     handlers.apiError:
       title: apiError
       description: 'Generic API error. An error will have either the "error" or "errors"
@@ -167,24 +174,6 @@ components:
           type: string
         errors:
           type: object
-    handlers.apiExportRequest:
-      title: apiExportRequest
-      type: object
-      properties:
-        format:
-          description: Export format, defaults to csv.
-          type: string
-          enum:
-          - 'enum:'
-          - csv
-          - json
-        start_from_day:
-          description: The day to start this export from, for JSON exports.
-          type: string
-          format: date-time
-        start_from_hit_id:
-          description: Pagination cursor for CSV; only export hits with an ID greater than this.
-          type: integer
     v2.Export:
       title: Export
       type: object
@@ -233,13 +222,24 @@ components:
         start_from_hit_id:
           description: The hit ID this export was started from, for CSV exports.
           type: integer
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
+    handlers.apiExportRequest:
+      title: apiExportRequest
       type: object
       properties:
-        Error:
+        format:
+          description: Export format, defaults to csv.
           type: string
+          enum:
+          - 'enum:'
+          - csv
+          - json
+        start_from_day:
+          description: The day to start this export from, for JSON exports.
+          type: string
+          format: date-time
+        start_from_hit_id:
+          description: Pagination cursor for CSV; only export hits with an ID greater than this.
+          type: integer
   securitySchemes:
     basicAuth:
       type: http

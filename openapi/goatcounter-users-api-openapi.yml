@@ -58,32 +58,6 @@ paths:
       description: Hosted GoatCounter (replace host with your site's subdomain)
 components:
   schemas:
-    goatcounter.Widget:
-      title: Widget
-      description: Widgets is a list of widgets to be printed, in order.
-      type: object
-    goatcounter.APIToken:
-      title: APIToken
-      type: object
-      properties:
-        name:
-          type: string
-        permissions:
-          type: integer
-        sites:
-          type: integer
-          items: {}
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
-      type: object
-      properties:
-        error:
-          type: string
-        errors:
-          type: object
     goatcounter.View:
       title: View
       description: 'Views for the dashboard; these settings apply to all widget and are
@@ -100,9 +74,6 @@ components:
         period:
           description: '"week", "month", etc., or n days: "8"'
           type: string
-    goatcounter.UserAccess:
-      title: UserAccess
-      type: object
     goatcounter.User:
       title: User
       type: object
@@ -152,6 +123,9 @@ components:
           type: string
           format: date-time
           readOnly: true
+    goatcounter.UserAccess:
+      title: UserAccess
+      type: object
     goatcounter.UserSettings:
       title: UserSettings
       description: UserSettings are all user preferences.
@@ -188,13 +162,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/goatcounter.Widget'
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
     handlers.meResponse:
       title: meResponse
       type: object
@@ -225,6 +192,39 @@ components:
         Zone:
           description: Asia/Makassar
           type: string
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
+    goatcounter.Widget:
+      title: Widget
+      description: Widgets is a list of widgets to be printed, in order.
+      type: object
+    goatcounter.APIToken:
+      title: APIToken
+      type: object
+      properties:
+        name:
+          type: string
+        permissions:
+          type: integer
+        sites:
+          type: integer
+          items: {}
   securitySchemes:
     basicAuth:
       type: http

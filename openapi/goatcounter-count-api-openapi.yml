@@ -64,17 +64,6 @@ paths:
         required: true
 components:
   schemas:
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
-      type: object
-      properties:
-        error:
-          type: string
-        errors:
-          type: object
     handlers.APICountRequestHit:
       title: APICountRequestHit
       type: object
@@ -151,6 +140,24 @@ components:
         user_agent:
           description: User-Agent header.
           type: string
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
     handlers.APICountRequest:
       title: APICountRequest
       type: object
@@ -175,13 +182,6 @@ components:
 
             pageviews that don''t have these parameters set.'
           type: boolean
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
   securitySchemes:
     basicAuth:
       type: http

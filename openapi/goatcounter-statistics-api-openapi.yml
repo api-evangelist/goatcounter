@@ -128,12 +128,6 @@ paths:
           description: Detailed statistics.
 components:
   parameters:
-    End:
-      name: end
-      in: query
-      schema:
-        type: string
-        format: date-time
     Start:
       name: start
       in: query
@@ -146,6 +140,12 @@ components:
       description: Filter paths by substring or regex.
       schema:
         type: string
+    End:
+      name: end
+      in: query
+      schema:
+        type: string
+        format: date-time
   securitySchemes:
     bearerAuth:
       type: http
