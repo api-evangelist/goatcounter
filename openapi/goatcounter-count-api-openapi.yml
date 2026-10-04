@@ -64,6 +64,48 @@ paths:
         required: true
 components:
   schemas:
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
+    handlers.APICountRequest:
+      title: APICountRequest
+      type: object
+      properties:
+        filter:
+          description: "Filter pageviews; accepted values:\n\n ip Ignore requests coming from IP addresses listed in \"Settings → Ignore IP\". Requires the IP field to be set.\n\n[\"ip\"] is used if this field isn't sent; send an empty array ([]) to not\nfilter anything.\n\nThe X-Goatcounter-Filter header will be set to a list of indexes if any\npageviews are filtered; for example:\n\n X-Goatcounter-Filter: 5, 10\n\nThis header will be omitted if nothing is filtered."
+          type: array
+          items:
+            type: string
+        hits:
+          description: Hits is the list of pageviews.
+          type: array
+          items:
+            $ref: '#/components/schemas/handlers.APICountRequestHit'
+        no_sessions:
+          description: 'By default it''s an error to send pageviews that don''t have either a
+
+            Session or UserAgent and IP set. This avoids accidental errors.
+
+
+            When this is set it will just continue without recording sessions for
+
+            pageviews that don''t have these parameters set.'
+          type: boolean
     handlers.APICountRequestHit:
       title: APICountRequestHit
       type: object
@@ -140,48 +182,6 @@ components:
         user_agent:
           description: User-Agent header.
           type: string
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
-      type: object
-      properties:
-        error:
-          type: string
-        errors:
-          type: object
-    handlers.APICountRequest:
-      title: APICountRequest
-      type: object
-      properties:
-        filter:
-          description: "Filter pageviews; accepted values:\n\n ip Ignore requests coming from IP addresses listed in \"Settings → Ignore IP\". Requires the IP field to be set.\n\n[\"ip\"] is used if this field isn't sent; send an empty array ([]) to not\nfilter anything.\n\nThe X-Goatcounter-Filter header will be set to a list of indexes if any\npageviews are filtered; for example:\n\n X-Goatcounter-Filter: 5, 10\n\nThis header will be omitted if nothing is filtered."
-          type: array
-          items:
-            type: string
-        hits:
-          description: Hits is the list of pageviews.
-          type: array
-          items:
-            $ref: '#/components/schemas/handlers.APICountRequestHit'
-        no_sessions:
-          description: 'By default it''s an error to send pageviews that don''t have either a
-
-            Session or UserAgent and IP set. This avoids accidental errors.
-
-
-            When this is set it will just continue without recording sessions for
-
-            pageviews that don''t have these parameters set.'
-          type: boolean
   securitySchemes:
     basicAuth:
       type: http

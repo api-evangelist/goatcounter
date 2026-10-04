@@ -58,21 +58,74 @@ paths:
       description: Hosted GoatCounter (replace host with your site's subdomain)
 components:
   schemas:
-    goatcounter.View:
-      title: View
-      description: 'Views for the dashboard; these settings apply to all widget and are
-
-        configurable in the yellow box at the top.'
+    goatcounter.APIToken:
+      title: APIToken
       type: object
       properties:
-        filter:
-          type: string
-        group:
-          type: integer
         name:
           type: string
-        period:
-          description: '"week", "month", etc., or n days: "8"'
+        permissions:
+          type: integer
+        sites:
+          type: integer
+          items: {}
+    goatcounter.UserSettings:
+      title: UserSettings
+      description: UserSettings are all user preferences.
+      type: object
+      properties:
+        date_format:
+          type: string
+        datepicker:
+          type: boolean
+        email_reports:
+          type: integer
+        fewer_numbers:
+          type: boolean
+        fewer_numbers_lock_until:
+          type: string
+          format: date-time
+        language:
+          type: string
+        number_format:
+          type: string
+        sunday_starts_week:
+          type: boolean
+        theme:
+          type: string
+        timezone:
+          $ref: '#/components/schemas/tz.Zone'
+        twenty_four_hours:
+          type: boolean
+        views:
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.View'
+        widgets:
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.Widget'
+    tz.Zone:
+      title: Zone
+      description: Zone represents a time zone.
+      type: object
+      properties:
+        Abbr:
+          description: WITA – the correct abbreviation may change depending on the time of year (i.e. CET and CEST, depending on DST).
+          type: array
+          items:
+            type: string
+        Comments:
+          description: Borneo (east, south); Sulawesi/Celebes, Bali, Nusa Tengarra; Timor (west)
+          type: string
+        CountryCode:
+          description: ID
+          type: string
+        CountryName:
+          description: Indonesia
+          type: string
+        Zone:
+          description: Asia/Makassar
           type: string
     goatcounter.User:
       title: User
@@ -123,45 +176,33 @@ components:
           type: string
           format: date-time
           readOnly: true
-    goatcounter.UserAccess:
-      title: UserAccess
-      type: object
-    goatcounter.UserSettings:
-      title: UserSettings
-      description: UserSettings are all user preferences.
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
       type: object
       properties:
-        date_format:
+        Error:
           type: string
-        datepicker:
-          type: boolean
-        email_reports:
+    goatcounter.View:
+      title: View
+      description: 'Views for the dashboard; these settings apply to all widget and are
+
+        configurable in the yellow box at the top.'
+      type: object
+      properties:
+        filter:
+          type: string
+        group:
           type: integer
-        fewer_numbers:
-          type: boolean
-        fewer_numbers_lock_until:
+        name:
           type: string
-          format: date-time
-        language:
+        period:
+          description: '"week", "month", etc., or n days: "8"'
           type: string
-        number_format:
-          type: string
-        sunday_starts_week:
-          type: boolean
-        theme:
-          type: string
-        timezone:
-          $ref: '#/components/schemas/tz.Zone'
-        twenty_four_hours:
-          type: boolean
-        views:
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.View'
-        widgets:
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.Widget'
+    goatcounter.Widget:
+      title: Widget
+      description: Widgets is a list of widgets to be printed, in order.
+      type: object
     handlers.meResponse:
       title: meResponse
       type: object
@@ -170,35 +211,6 @@ components:
           $ref: '#/components/schemas/goatcounter.APIToken'
         user:
           $ref: '#/components/schemas/goatcounter.User'
-    tz.Zone:
-      title: Zone
-      description: Zone represents a time zone.
-      type: object
-      properties:
-        Abbr:
-          description: WITA – the correct abbreviation may change depending on the time of year (i.e. CET and CEST, depending on DST).
-          type: array
-          items:
-            type: string
-        Comments:
-          description: Borneo (east, south); Sulawesi/Celebes, Bali, Nusa Tengarra; Timor (west)
-          type: string
-        CountryCode:
-          description: ID
-          type: string
-        CountryName:
-          description: Indonesia
-          type: string
-        Zone:
-          description: Asia/Makassar
-          type: string
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
     handlers.apiError:
       title: apiError
       description: 'Generic API error. An error will have either the "error" or "errors"
@@ -210,21 +222,9 @@ components:
           type: string
         errors:
           type: object
-    goatcounter.Widget:
-      title: Widget
-      description: Widgets is a list of widgets to be printed, in order.
+    goatcounter.UserAccess:
+      title: UserAccess
       type: object
-    goatcounter.APIToken:
-      title: APIToken
-      type: object
-      properties:
-        name:
-          type: string
-        permissions:
-          type: integer
-        sites:
-          type: integer
-          items: {}
   securitySchemes:
     basicAuth:
       type: http

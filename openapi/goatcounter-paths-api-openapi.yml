@@ -98,13 +98,6 @@ components:
         title:
           description: Page title
           type: string
-    handlers.authError:
-      title: authError
-      description: 'Authentication error: the API key was not provided or incorrect.'
-      type: object
-      properties:
-        Error:
-          type: string
     handlers.apiError:
       title: apiError
       description: 'Generic API error. An error will have either the "error" or "errors"
@@ -116,6 +109,13 @@ components:
           type: string
         errors:
           type: object
+    handlers.authError:
+      title: authError
+      description: 'Authentication error: the API key was not provided or incorrect.'
+      type: object
+      properties:
+        Error:
+          type: string
     handlers.apiPathsResponse:
       title: apiPathsResponse
       type: object

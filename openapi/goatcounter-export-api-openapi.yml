@@ -163,17 +163,24 @@ components:
       properties:
         Error:
           type: string
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
+    handlers.apiExportRequest:
+      title: apiExportRequest
       type: object
       properties:
-        error:
+        format:
+          description: Export format, defaults to csv.
           type: string
-        errors:
-          type: object
+          enum:
+          - 'enum:'
+          - csv
+          - json
+        start_from_day:
+          description: The day to start this export from, for JSON exports.
+          type: string
+          format: date-time
+        start_from_hit_id:
+          description: Pagination cursor for CSV; only export hits with an ID greater than this.
+          type: integer
     v2.Export:
       title: Export
       type: object
@@ -222,24 +229,17 @@ components:
         start_from_hit_id:
           description: The hit ID this export was started from, for CSV exports.
           type: integer
-    handlers.apiExportRequest:
-      title: apiExportRequest
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
       type: object
       properties:
-        format:
-          description: Export format, defaults to csv.
+        error:
           type: string
-          enum:
-          - 'enum:'
-          - csv
-          - json
-        start_from_day:
-          description: The day to start this export from, for JSON exports.
-          type: string
-          format: date-time
-        start_from_hit_id:
-          description: Pagination cursor for CSV; only export hits with an ID greater than this.
-          type: integer
+        errors:
+          type: object
   securitySchemes:
     basicAuth:
       type: http
