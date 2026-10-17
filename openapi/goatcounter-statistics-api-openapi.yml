@@ -134,18 +134,18 @@ components:
       schema:
         type: string
         format: date-time
-    Start:
-      name: start
-      in: query
-      schema:
-        type: string
-        format: date-time
     Filter:
       name: filter
       in: query
       description: Filter paths by substring or regex.
       schema:
         type: string
+    Start:
+      name: start
+      in: query
+      schema:
+        type: string
+        format: date-time
   securitySchemes:
     bearerAuth:
       type: http

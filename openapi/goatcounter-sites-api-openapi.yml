@@ -311,6 +311,121 @@ paths:
       description: Hosted GoatCounter (replace host with your site's subdomain)
 components:
   schemas:
+    goatcounter.View:
+      title: View
+      description: 'Views for the dashboard; these settings apply to all widget and are
+
+        configurable in the yellow box at the top.'
+      type: object
+      properties:
+        filter:
+          type: string
+        group:
+          type: integer
+        name:
+          type: string
+        period:
+          description: '"week", "month", etc., or n days: "8"'
+          type: string
+    handlers.apiSiteUpdateRequest:
+      title: apiSiteUpdateRequest
+      type: object
+      properties:
+        cname:
+          type: string
+        link_domain:
+          type: string
+        settings:
+          $ref: '#/components/schemas/goatcounter.SiteSettings'
+    goatcounter.Site:
+      title: Site
+      type: object
+      properties:
+        cname:
+          description: 'Custom domain, e.g. "stats.example.com".
+
+
+            When self-hosting this is the domain/vhost your site is accessible at.'
+          type: string
+        cname_setup_at:
+          description: When the CNAME was verified.
+          type: string
+          format: date-time
+          readOnly: true
+        code:
+          description: 'Domain code (e.g. "arp242", which makes arp242.goatcounter.com). Only
+
+            used for goatcounter.com and not when self-hosting.'
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        first_hit_at:
+          type: string
+          format: date-time
+        id:
+          type: integer
+          readOnly: true
+        link_domain:
+          description: 'Site domain for linking (www.arp242.net). Note this can be a full URL and
+
+            is a bit misnamed.'
+          type: string
+        parent:
+          type: integer
+          readOnly: true
+        received_data:
+          description: 'Whether this site has received any data; will be true after the first
+
+            pageview.'
+          type: boolean
+        setttings:
+          $ref: '#/components/schemas/goatcounter.SiteSettings'
+        state:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        user_defaults:
+          $ref: '#/components/schemas/goatcounter.UserSettings'
+    goatcounter.SiteSettings:
+      title: SiteSettings
+      description: 'SiteSettings contains all the user-configurable settings for a site, with
+
+        the exception of the domain settings.
+
+
+        This is stored as JSON in the database.'
+      type: object
+      properties:
+        allow_bosmang:
+          type: boolean
+        allow_counter:
+          type: boolean
+        allow_embed:
+          type: array
+          items:
+            type: string
+        collect:
+          type: integer
+        collect_regions:
+          type: array
+          items:
+            type: string
+        data_retention:
+          type: integer
+        ignore_ips:
+          type: array
+          items:
+            type: string
+        public:
+          type: string
+        secret:
+          type: string
+    goatcounter.Widget:
+      title: Widget
+      description: Widgets is a list of widgets to be printed, in order.
+      type: object
     goatcounter.UserSettings:
       title: UserSettings
       description: UserSettings are all user preferences.
@@ -369,40 +484,6 @@ components:
         Zone:
           description: Asia/Makassar
           type: string
-    goatcounter.SiteSettings:
-      title: SiteSettings
-      description: 'SiteSettings contains all the user-configurable settings for a site, with
-
-        the exception of the domain settings.
-
-
-        This is stored as JSON in the database.'
-      type: object
-      properties:
-        allow_bosmang:
-          type: boolean
-        allow_counter:
-          type: boolean
-        allow_embed:
-          type: array
-          items:
-            type: string
-        collect:
-          type: integer
-        collect_regions:
-          type: array
-          items:
-            type: string
-        data_retention:
-          type: integer
-        ignore_ips:
-          type: array
-          items:
-            type: string
-        public:
-          type: string
-        secret:
-          type: string
     handlers.authError:
       title: authError
       description: 'Authentication error: the API key was not provided or incorrect.'
@@ -410,36 +491,14 @@ components:
       properties:
         Error:
           type: string
-    handlers.apiSiteUpdateRequest:
-      title: apiSiteUpdateRequest
+    handlers.apiSitesResponse:
+      title: apiSitesResponse
       type: object
       properties:
-        cname:
-          type: string
-        link_domain:
-          type: string
-        settings:
-          $ref: '#/components/schemas/goatcounter.SiteSettings'
-    goatcounter.View:
-      title: View
-      description: 'Views for the dashboard; these settings apply to all widget and are
-
-        configurable in the yellow box at the top.'
-      type: object
-      properties:
-        filter:
-          type: string
-        group:
-          type: integer
-        name:
-          type: string
-        period:
-          description: '"week", "month", etc., or n days: "8"'
-          type: string
-    goatcounter.Widget:
-      title: Widget
-      description: Widgets is a list of widgets to be printed, in order.
-      type: object
+        sites:
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.Site'
     handlers.apiError:
       title: apiError
       description: 'Generic API error. An error will have either the "error" or "errors"
@@ -451,65 +510,6 @@ components:
           type: string
         errors:
           type: object
-    handlers.apiSitesResponse:
-      title: apiSitesResponse
-      type: object
-      properties:
-        sites:
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.Site'
-    goatcounter.Site:
-      title: Site
-      type: object
-      properties:
-        cname:
-          description: 'Custom domain, e.g. "stats.example.com".
-
-
-            When self-hosting this is the domain/vhost your site is accessible at.'
-          type: string
-        cname_setup_at:
-          description: When the CNAME was verified.
-          type: string
-          format: date-time
-          readOnly: true
-        code:
-          description: 'Domain code (e.g. "arp242", which makes arp242.goatcounter.com). Only
-
-            used for goatcounter.com and not when self-hosting.'
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        first_hit_at:
-          type: string
-          format: date-time
-        id:
-          type: integer
-          readOnly: true
-        link_domain:
-          description: 'Site domain for linking (www.arp242.net). Note this can be a full URL and
-
-            is a bit misnamed.'
-          type: string
-        parent:
-          type: integer
-          readOnly: true
-        received_data:
-          description: 'Whether this site has received any data; will be true after the first
-
-            pageview.'
-          type: boolean
-        setttings:
-          $ref: '#/components/schemas/goatcounter.SiteSettings'
-        state:
-          type: string
-        updated_at:
-          type: string
-          format: date-time
-        user_defaults:
-          $ref: '#/components/schemas/goatcounter.UserSettings'
     Site:
       type: object
       properties:

@@ -439,6 +439,17 @@ paths:
       - Stats
 components:
   schemas:
+    handlers.apiStatsResponse:
+      title: apiStatsResponse
+      type: object
+      properties:
+        more:
+          type: boolean
+        stats:
+          description: Sorted list of paths with their visitor and pageview count.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.HitStat'
     goatcounter.HitStat:
       title: HitStat
       type: object
@@ -497,32 +508,6 @@ components:
         title:
           description: Page title.
           type: string
-    goatcounter.HitListStat:
-      title: HitListStat
-      type: object
-      properties:
-        daily:
-          description: Total visitors for this day.
-          type: integer
-        day:
-          description: Day these statistics are for.
-          type: string
-          format: date
-        hourly:
-          description: Visitors per hour.
-          type: array
-          items:
-            type: integer
-        monthly:
-          description: 'Visitors for the month; set on first day of the month. This value will
-
-            not be set if it''s 0.'
-          type: integer
-        weekly:
-          description: 'Visitors for the week; set once every 7 days. This value will not be set
-
-            if it''s 0.'
-          type: integer
     handlers.apiHitsResponse:
       title: apiHitsResponse
       type: object
@@ -555,17 +540,43 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/goatcounter.HitStat'
-    handlers.apiStatsResponse:
-      title: apiStatsResponse
+    goatcounter.HitListStat:
+      title: HitListStat
       type: object
       properties:
-        more:
-          type: boolean
-        stats:
-          description: Sorted list of paths with their visitor and pageview count.
+        daily:
+          description: Total visitors for this day.
+          type: integer
+        day:
+          description: Day these statistics are for.
+          type: string
+          format: date
+        hourly:
+          description: Visitors per hour.
           type: array
           items:
-            $ref: '#/components/schemas/goatcounter.HitStat'
+            type: integer
+        monthly:
+          description: 'Visitors for the month; set on first day of the month. This value will
+
+            not be set if it''s 0.'
+          type: integer
+        weekly:
+          description: 'Visitors for the week; set once every 7 days. This value will not be set
+
+            if it''s 0.'
+          type: integer
+    handlers.apiError:
+      title: apiError
+      description: 'Generic API error. An error will have either the "error" or "errors"
+
+        field set, but not both.'
+      type: object
+      properties:
+        error:
+          type: string
+        errors:
+          type: object
     handlers.apiCountTotalResponse:
       title: apiCountTotalResponse
       type: object
@@ -586,17 +597,6 @@ components:
 
             always in UTC.'
           type: integer
-    handlers.apiError:
-      title: apiError
-      description: 'Generic API error. An error will have either the "error" or "errors"
-
-        field set, but not both.'
-      type: object
-      properties:
-        error:
-          type: string
-        errors:
-          type: object
   securitySchemes:
     basicAuth:
       type: http

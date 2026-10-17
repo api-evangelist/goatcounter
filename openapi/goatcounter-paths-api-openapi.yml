@@ -98,6 +98,18 @@ components:
         title:
           description: Page title
           type: string
+    handlers.apiPathsResponse:
+      title: apiPathsResponse
+      type: object
+      properties:
+        more:
+          description: True if there are more paths.
+          type: boolean
+        paths:
+          description: List of paths, sorted by ID.
+          type: array
+          items:
+            $ref: '#/components/schemas/goatcounter.Path'
     handlers.apiError:
       title: apiError
       description: 'Generic API error. An error will have either the "error" or "errors"
@@ -116,18 +128,6 @@ components:
       properties:
         Error:
           type: string
-    handlers.apiPathsResponse:
-      title: apiPathsResponse
-      type: object
-      properties:
-        more:
-          description: True if there are more paths.
-          type: boolean
-        paths:
-          description: List of paths, sorted by ID.
-          type: array
-          items:
-            $ref: '#/components/schemas/goatcounter.Path'
   securitySchemes:
     basicAuth:
       type: http

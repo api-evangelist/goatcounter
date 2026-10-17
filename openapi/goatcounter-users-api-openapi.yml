@@ -58,17 +58,78 @@ paths:
       description: Hosted GoatCounter (replace host with your site's subdomain)
 components:
   schemas:
-    goatcounter.APIToken:
-      title: APIToken
+    goatcounter.View:
+      title: View
+      description: 'Views for the dashboard; these settings apply to all widget and are
+
+        configurable in the yellow box at the top.'
       type: object
       properties:
+        filter:
+          type: string
+        group:
+          type: integer
         name:
           type: string
-        permissions:
+        period:
+          description: '"week", "month", etc., or n days: "8"'
+          type: string
+    goatcounter.UserAccess:
+      title: UserAccess
+      type: object
+    goatcounter.User:
+      title: User
+      type: object
+      properties:
+        access:
+          type: object
+          readOnly: true
+          additionalProperties:
+            $ref: '#/components/schemas/goatcounter.UserAccess'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        email:
+          type: string
+        email_verified:
+          type: boolean
+          readOnly: true
+        id:
           type: integer
-        sites:
+          readOnly: true
+        last_report_at:
+          description: Keep track when the last email report was sent, so we don't double-send them.
+          type: string
+          format: date-time
+        login_at:
+          type: string
+          format: date-time
+          readOnly: true
+        open_at:
+          type: string
+          format: date-time
+          readOnly: true
+        reset_at:
+          type: string
+          format: date-time
+          readOnly: true
+        settings:
+          $ref: '#/components/schemas/goatcounter.UserSettings'
+        site:
           type: integer
-          items: {}
+          readOnly: true
+        totp_enabled:
+          type: boolean
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    goatcounter.Widget:
+      title: Widget
+      description: Widgets is a list of widgets to be printed, in order.
+      type: object
     goatcounter.UserSettings:
       title: UserSettings
       description: UserSettings are all user preferences.
@@ -127,55 +188,17 @@ components:
         Zone:
           description: Asia/Makassar
           type: string
-    goatcounter.User:
-      title: User
+    goatcounter.APIToken:
+      title: APIToken
       type: object
       properties:
-        access:
-          type: object
-          readOnly: true
-          additionalProperties:
-            $ref: '#/components/schemas/goatcounter.UserAccess'
-        created_at:
+        name:
           type: string
-          format: date-time
-          readOnly: true
-        email:
-          type: string
-        email_verified:
-          type: boolean
-          readOnly: true
-        id:
+        permissions:
           type: integer
-          readOnly: true
-        last_report_at:
-          description: Keep track when the last email report was sent, so we don't double-send them.
-          type: string
-          format: date-time
-        login_at:
-          type: string
-          format: date-time
-          readOnly: true
-        open_at:
-          type: string
-          format: date-time
-          readOnly: true
-        reset_at:
-          type: string
-          format: date-time
-          readOnly: true
-        settings:
-          $ref: '#/components/schemas/goatcounter.UserSettings'
-        site:
+        sites:
           type: integer
-          readOnly: true
-        totp_enabled:
-          type: boolean
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
+          items: {}
     handlers.authError:
       title: authError
       description: 'Authentication error: the API key was not provided or incorrect.'
@@ -183,26 +206,6 @@ components:
       properties:
         Error:
           type: string
-    goatcounter.View:
-      title: View
-      description: 'Views for the dashboard; these settings apply to all widget and are
-
-        configurable in the yellow box at the top.'
-      type: object
-      properties:
-        filter:
-          type: string
-        group:
-          type: integer
-        name:
-          type: string
-        period:
-          description: '"week", "month", etc., or n days: "8"'
-          type: string
-    goatcounter.Widget:
-      title: Widget
-      description: Widgets is a list of widgets to be printed, in order.
-      type: object
     handlers.meResponse:
       title: meResponse
       type: object
@@ -222,9 +225,6 @@ components:
           type: string
         errors:
           type: object
-    goatcounter.UserAccess:
-      title: UserAccess
-      type: object
   securitySchemes:
     basicAuth:
       type: http
