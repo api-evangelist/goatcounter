@@ -1,0 +1,103 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: GoatCounter
+providerId: goatcounter
+created: '2026-05-04'
+modified: '2026-08-13'
+generated: '2026-08-13'
+method: searched
+source: https://www.goatcounter.com/ (Pricing section)
+tags:
+  - Analytics
+  - Pageviews
+  - Privacy
+  - Statistics
+  - Web Analytics
+description: >-
+  GoatCounter publishes no priced plan ladder. The hosted service at goatcounter.com is offered
+  free of charge for reasonable public usage and funded by donations; heavier or commercial-scale
+  use is directed to the self-hosted open-source build rather than to a paid tier. This file
+  replaces a 2026-05-04 bulk-sweep scaffold that invented Free / Professional / Enterprise tiers
+  with fabricated quotas, overage pricing, SLA targets and webhook entitlements — none of which
+  GoatCounter offers.
+pricing_model: free-donation-supported
+currency: null
+plan_count: 1
+plans:
+  - id: goatcounter-hosted
+    name: Hosted (goatcounter.com)
+    type: free
+    price: '0.00'
+    billing_period: none
+    description: >-
+      Verbatim from the pricing section of the GoatCounter homepage: "GoatCounter.com is currently
+      offered for free for reasonable public usage. Running your personal website or small-to-medium
+      business on it is fine, but sending millions of pageviews/day isn't. You can self-host
+      GoatCounter easily if you want to use it for more serious purposes. Donations are accepted via
+      Github Sponsors to cover server costs."
+    quota:
+      published: false
+      note: >-
+        No numeric pageview quota is published. The stated boundary is qualitative — personal sites
+        and small-to-medium businesses are in scope, millions of pageviews per day are not.
+    entries:
+      - label: API rate limit
+        name: api_rate_limit
+        type: rate
+        metric: requests_per_second
+        limit: 4
+        timeFrame: second
+        price: '0.00'
+        source: rate-limits/goatcounter-rate-limits.yml
+    elements:
+      - name: Full JSON API access
+      - name: Public documentation
+      - name: Support by email and public GitHub issues
+      - name: Full data export (CSV and JSON)
+alternatives:
+  - id: goatcounter-self-hosted
+    name: Self-hosted
+    type: open-source
+    price: '0.00'
+    license: EUPL-1.2 (modified)
+    license_note: >-
+      The LICENSE file states "a slightly modified version of European Union Public License
+      (EUPL) 1.2; the only difference is that the Compatible Licenses Appendix removes some
+      licenses". count.js is separately licensed ISC to ease integration. GitHub reports the
+      repository license as NOASSERTION because of the modification.
+    license_url: https://github.com/arp242/goatcounter/blob/main/LICENSE
+    url: https://github.com/arp242/goatcounter
+    description: >-
+      GoatCounter is open source and can be run on your own infrastructure with SQLite or PostgreSQL.
+      This is the route the provider directs commercial-scale and high-volume users to instead of a
+      paid hosted tier. Not a purchasable plan, so it is recorded here rather than in plans[].
+funding:
+  model: donations
+  channels:
+    - name: GitHub Sponsors
+      url: https://github.com/sponsors/arp242
+    - name: NLnet NGI0
+      url: https://nlnet.nl/project/GoatCounter/
+notes:
+  - No paid tier, no enterprise tier, no published overage pricing, and no contractual SLA.
+  - No "contact sales" gate — signup at https://www.goatcounter.com/signup is self-serve.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - free
+  units:
+  - rate
+  plans:
+  - name: Hosted (goatcounter.com)
+    access: free
+    model: free
+    model_how: derived
+    units:
+    - rate
+    periods:
+    - second
